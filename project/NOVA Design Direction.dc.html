@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #080808; }
+    ::selection { background: #C7FF3D; color: #080808; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  </style>
+</helmet>
+
+<div style="background:#080808;color:#F5F5F5;font-family:'Inter',sans-serif;">
+
+  <!-- INTRO -->
+  <section style="max-width:1000px;margin:0 auto;padding:120px 40px 80px;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.16em;color:#C7FF3D;margin-bottom:20px;">NOVA — VISUAL DESIGN DIRECTION</div>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-size:56px;line-height:1.05;font-weight:600;margin:0 0 24px;letter-spacing:-0.01em;">Design system &amp; homepage direction</h1>
+    <p style="font-size:18px;line-height:1.6;color:#9A9A9A;max-width:640px;margin:0;">A dark, editorial system for a multi-platform creator business — built to hold Section 01 (Hero) and 02 (What's Happening Now) now, and scale to Content, Shop, Community and beyond. This is a direction to approve, not the built site.</p>
+  </section>
+
+  <!-- CRITICAL NOTES -->
+  <section style="max-width:1000px;margin:0 auto;padding:0 40px 96px;border-bottom:1px solid #171717;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:28px;">BEFORE YOU APPROVE — FOUR CALLS I MADE</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:32px 48px;">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">Accent needs a second job</div>
+        <p style="font-size:15px;line-height:1.6;color:#9A9A9A;margin:0;">#C7FF3D reads clearly as "live/active," which competes with the LIVE dot everywhere. I've reserved pure lime strictly for the live state + primary CTA, and moved secondary emphasis (view counts, selected nav) to a dimmer lime tint so the eye still knows what's actually live.</p>
+      </div>
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">Two floating hero widgets is a lot</div>
+        <p style="font-size:15px;line-height:1.6;color:#9A9A9A;margin:0;">Live status + a product drop both floating over one photo risks clutter exactly where the brief warns against it. I've kept the drop card small, lower-contrast and lower in the frame, clearly secondary to the live card.</p>
+      </div>
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">Ecosystem strip needs a disclaimer, not just restraint</div>
+        <p style="font-size:15px;line-height:1.6;color:#9A9A9A;margin:0;">Follower counts sitting in the footer of a hero read as real metrics even when small. I've added a tiny "demo figures" label so the portfolio piece can't be mistaken for a real audience claim.</p>
+      </div>
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:8px;">Section 02 should sell one action, not four</div>
+        <p style="font-size:15px;line-height:1.6;color:#9A9A9A;margin:0;">Featured video + live panel + next-up + activity row all in one section dilutes the CTA. I've made the featured video / live panel the unmistakable hero of the section and demoted "next up" and "latest" to a quieter supporting strip — content discovery without four competing asks.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR SYSTEM -->
+  <section style="max-width:1000px;margin:0 auto;padding:96px 40px;border-bottom:1px solid #171717;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">01 — COLOR</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 40px;">Monochrome ground, one accent</h2>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;">
+      <div>
+        <div style="height:110px;background:#080808;border:1px solid #171717;border-radius:6px;"></div>
+        <div style="margin-top:12px;font-size:13px;font-weight:600;">Background</div>
+        <div style="font-size:13px;color:#9A9A9A;font-family:monospace;">#080808</div>
+      </div>
+      <div>
+        <div style="height:110px;background:#111111;border-radius:6px;"></div>
+        <div style="margin-top:12px;font-size:13px;font-weight:600;">Surface</div>
+        <div style="font-size:13px;color:#9A9A9A;font-family:monospace;">#111111</div>
+      </div>
+      <div>
+        <div style="height:110px;background:#171717;border-radius:6px;"></div>
+        <div style="margin-top:12px;font-size:13px;font-weight:600;">Surface 2</div>
+        <div style="font-size:13px;color:#9A9A9A;font-family:monospace;">#171717</div>
+      </div>
+      <div>
+        <div style="height:110px;background:#F5F5F5;border-radius:6px;"></div>
+        <div style="margin-top:12px;font-size:13px;font-weight:600;">Text primary</div>
+        <div style="font-size:13px;color:#9A9A9A;font-family:monospace;">#F5F5F5</div>
+      </div>
+      <div>
+        <div style="height:110px;background:#C7FF3D;border-radius:6px;"></div>
+        <div style="margin-top:12px;font-size:13px;font-weight:600;">Accent</div>
+        <div style="font-size:13px;color:#9A9A9A;font-family:monospace;">#C7FF3D</div>
+      </div>
+    </div>
+    <div style="margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#F5F5F5;margin-bottom:6px;">Use the accent for</div>
+        <p style="font-size:14px;color:#9A9A9A;line-height:1.7;margin:0;">Primary CTA fill, the live dot, selected nav underline, key numbers (view count, watching count), focus rings.</p>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#F5F5F5;margin-bottom:6px;">Never use the accent for</div>
+        <p style="font-size:14px;color:#9A9A9A;line-height:1.7;margin:0;">Backgrounds, large fills, body copy, decorative glow, more than one element per view competing for attention.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPE SYSTEM -->
+  <section style="max-width:1000px;margin:0 auto;padding:96px 40px;border-bottom:1px solid #171717;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">02 — TYPE</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 40px;">Space Grotesk for statement, Inter for interface</h2>
+    <div style="display:flex;flex-direction:column;gap:28px;">
+      <div style="display:flex;align-items:baseline;gap:24px;border-bottom:1px solid #171717;padding-bottom:24px;">
+        <div style="width:140px;font-size:12px;color:#9A9A9A;font-family:monospace;flex-shrink:0;">Display / 96</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:88px;font-weight:600;line-height:0.95;letter-spacing:-0.01em;">MONETIZE</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;border-bottom:1px solid #171717;padding-bottom:24px;">
+        <div style="width:140px;font-size:12px;color:#9A9A9A;font-family:monospace;flex-shrink:0;">H1 / 48</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:600;line-height:1.05;">What's happening now</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;border-bottom:1px solid #171717;padding-bottom:24px;">
+        <div style="width:140px;font-size:12px;color:#9A9A9A;font-family:monospace;flex-shrink:0;">H2 / 28</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:600;">Featured video</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;border-bottom:1px solid #171717;padding-bottom:24px;">
+        <div style="width:140px;font-size:12px;color:#9A9A9A;font-family:monospace;flex-shrink:0;">Eyebrow / 13</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.16em;color:#C7FF3D;">CREATOR · STREAMER · DIGITAL BRAND</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:24px;">
+        <div style="width:140px;font-size:12px;color:#9A9A9A;font-family:monospace;flex-shrink:0;">Body / 17</div>
+        <div style="font-family:'Inter',sans-serif;font-size:17px;color:#F5F5F5;max-width:520px;line-height:1.6;">Content, community and everything in between — all in one place.</div>
+      </div>
+    </div>
+    <div style="margin-top:32px;font-size:14px;color:#9A9A9A;line-height:1.7;">Headings and labels in Space Grotesk (500/600); running copy, nav, buttons and data labels in Inter (400/500/600). Uppercase + letter-spacing (0.1–0.16em) marks eyebrows, kickers and small labels — never full sentences.</div>
+  </section>
+
+  <!-- SPACING / RADIUS / MOTION -->
+  <section style="max-width:1000px;margin:0 auto;padding:96px 40px;border-bottom:1px solid #171717;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">03 — SPACING, RADIUS &amp; MOTION</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 40px;">Editorial restraint, not decoration</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#F5F5F5;margin-bottom:12px;">Spacing</div>
+        <ul style="margin:0;padding:0;list-style:none;font-size:14px;color:#9A9A9A;line-height:1.9;">
+          <li>8px base unit; section rhythm at 96–160px</li>
+          <li>Generous negative space around the hero headline</li>
+          <li>Cards breathe — 24–32px internal padding, never tight</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#F5F5F5;margin-bottom:12px;">Radius</div>
+        <ul style="margin:0;padding:0;list-style:none;font-size:14px;color:#9A9A9A;line-height:1.9;">
+          <li>4px on buttons, tags, inputs — quiet, not pill-shaped</li>
+          <li>8–12px on cards and floating panels</li>
+          <li>Photography stays rectangular or intentionally cropped, never rounded</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#F5F5F5;margin-bottom:12px;">Motion</div>
+        <ul style="margin:0;padding:0;list-style:none;font-size:14px;color:#9A9A9A;line-height:1.9;">
+          <li>Entrance sequence ~1s total, staggered ~80–120ms per element</li>
+          <li>Parallax on hero photo capped at 6–8px</li>
+          <li>Live dot pulses on a slow 2s cycle — utility, not decoration</li>
+          <li>Hover scale 1.02 max; no glow, no particles, no 3D tilt</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAV -->
+  <section style="max-width:1000px;margin:0 auto;padding:96px 40px;border-bottom:1px solid #171717;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">04 — NAVIGATION</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 32px;">Minimal, text-only, one live signal</h2>
+    <div style="background:#111111;border-radius:10px;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.02em;">NOVA</div>
+      <div style="display:flex;gap:36px;font-size:14px;color:#9A9A9A;">
+        <div style="color:#F5F5F5;border-bottom:2px solid #C7FF3D;padding-bottom:4px;">CONTENT</div>
+        <div>SHOP</div>
+        <div>COMMUNITY</div>
+        <div>WORK WITH ME</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:0.06em;">
+        <span style="width:7px;height:7px;border-radius:50%;background:#C7FF3D;display:inline-block;animation:pulse 2s infinite;"></span>
+        LIVE
+      </div>
+    </div>
+    <div style="margin-top:16px;font-size:13px;color:#9A9A9A;">Mobile collapses to <span style="color:#F5F5F5;">NOVA</span> + <span style="color:#F5F5F5;">MENU</span> — no hamburger icon, the word does the job.</div>
+  </section>
+
+  <!-- BUTTONS & CARDS -->
+  <section style="max-width:1000px;margin:0 auto;padding:96px 40px;border-bottom:1px solid #171717;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">05 — BUTTONS &amp; CARDS</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 32px;">One loud action per view</h2>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:48px;">
+      <div style="background:#C7FF3D;color:#080808;font-weight:600;font-size:14px;padding:14px 24px;border-radius:4px;">WATCH LATEST →</div>
+      <div style="background:transparent;color:#F5F5F5;font-weight:600;font-size:14px;padding:14px 24px;border-radius:4px;border:1px solid #333;">EXPLORE NOVA</div>
+      <div style="background:transparent;color:#9A9A9A;font-weight:600;font-size:14px;padding:14px 24px;border-radius:4px;">WATCH VIDEO →</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px;">
+      <div style="background:#111111;border-radius:12px;padding:24px;">
+        <div style="height:160px;background:#171717;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;color:#555;font-size:13px;">16:9 thumbnail</div>
+        <div style="font-size:12px;color:#9A9A9A;letter-spacing:0.06em;margin-bottom:6px;">NOVA // EP. 047</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;margin-bottom:8px;">"I Tried Winning With The Worst Loadout"</div>
+        <div style="font-size:13px;color:#9A9A9A;">1.2M views · 3 days ago</div>
+      </div>
+      <div style="background:#111111;border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.06em;color:#C7FF3D;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#C7FF3D;animation:pulse 2s infinite;"></span> LIVE NOW
+        </div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;">Valorant Ranked Grind</div>
+        <div style="font-size:28px;font-family:'Space Grotesk',sans-serif;font-weight:600;color:#C7FF3D;">12.4K</div>
+        <div style="font-size:12px;color:#9A9A9A;letter-spacing:0.04em;">WATCHING NOW</div>
+        <div style="margin-top:auto;font-size:13px;font-weight:600;color:#F5F5F5;">WATCH LIVE →</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERO DESKTOP -->
+  <section style="max-width:1440px;margin:0 auto;padding:96px 40px 0;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">06 — HERO, DESKTOP</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 32px;">Section 01</h2>
+  </section>
+  <section style="max-width:1440px;margin:0 auto 96px;padding:0 40px;">
+    <div style="background:#0c0c0c;border-radius:16px;overflow:hidden;position:relative;">
+      <div style="padding:24px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;">NOVA</div>
+        <div style="display:flex;gap:32px;font-size:13px;color:#9A9A9A;">
+          <div>CONTENT</div><div>SHOP</div><div>COMMUNITY</div><div>WORK WITH ME</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.06em;">
+          <span style="width:7px;height:7px;border-radius:50%;background:#C7FF3D;display:inline-block;animation:pulse 2s infinite;"></span>LIVE
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:45fr 55fr;min-height:640px;">
+        <div style="padding:64px 48px;display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.16em;color:#C7FF3D;margin-bottom:24px;">CREATOR · STREAMER · DIGITAL BRAND</div>
+          <h1 style="font-family:'Space Grotesk',sans-serif;font-size:72px;font-weight:600;line-height:0.98;margin:0 0 32px;letter-spacing:-0.01em;">CREATE.<br>CONNECT.<br>MONETIZE.</h1>
+          <p style="font-size:17px;color:#9A9A9A;max-width:380px;line-height:1.6;margin:0 0 36px;">Content, community and everything in between — all in one place.</p>
+          <div style="display:flex;gap:16px;">
+            <div style="background:#C7FF3D;color:#080808;font-weight:600;font-size:14px;padding:15px 26px;border-radius:4px;">WATCH LATEST →</div>
+            <div style="border:1px solid #333;color:#F5F5F5;font-weight:600;font-size:14px;padding:15px 26px;border-radius:4px;">EXPLORE NOVA</div>
+          </div>
+        </div>
+        <div style="position:relative;overflow:hidden;">
+          <div style="position:absolute;inset:0 -10% 0 0;">
+            <image-slot id="hero-photo" shape="rect" placeholder="Cinematic creator portrait — dark, confident, subtle gaming influence"></image-slot>
+          </div>
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,#080808 0%,rgba(8,8,8,0) 22%);pointer-events:none;"></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,8,8,0.5) 0%,rgba(8,8,8,0) 40%);pointer-events:none;"></div>
+          <div style="position:absolute;top:32px;right:32px;background:rgba(17,17,17,0.85);backdrop-filter:blur(8px);border-radius:10px;padding:16px 20px;min-width:180px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.08em;color:#C7FF3D;margin-bottom:8px;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#C7FF3D;animation:pulse 2s infinite;"></span>LIVE NOW
+            </div>
+            <div style="font-size:13px;color:#F5F5F5;margin-bottom:6px;">12.4K watching</div>
+            <div style="font-size:12px;font-weight:600;color:#F5F5F5;">WATCH LIVE →</div>
+          </div>
+          <div style="position:absolute;bottom:32px;left:-24px;background:rgba(17,17,17,0.9);backdrop-filter:blur(8px);border-radius:10px;padding:14px 18px;">
+            <div style="font-size:10px;letter-spacing:0.08em;color:#9A9A9A;margin-bottom:4px;">LATEST DROP</div>
+            <div style="font-size:13px;font-weight:600;color:#F5F5F5;margin-bottom:4px;">NOVA // 001</div>
+            <div style="font-size:11px;font-weight:600;color:#C7FF3D;">EXPLORE →</div>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid #1a1a1a;padding:24px 48px;display:flex;justify-content:space-between;">
+        <div style="display:flex;gap:64px;">
+          <div><div style="font-size:11px;color:#9A9A9A;letter-spacing:0.08em;margin-bottom:4px;">YOUTUBE</div><div style="font-size:15px;font-weight:600;">250K</div></div>
+          <div><div style="font-size:11px;color:#9A9A9A;letter-spacing:0.08em;margin-bottom:4px;">TWITCH</div><div style="font-size:15px;font-weight:600;">82K</div></div>
+          <div><div style="font-size:11px;color:#9A9A9A;letter-spacing:0.08em;margin-bottom:4px;">TIKTOK</div><div style="font-size:15px;font-weight:600;">410K</div></div>
+          <div><div style="font-size:11px;color:#9A9A9A;letter-spacing:0.08em;margin-bottom:4px;">COMMUNITY</div><div style="font-size:15px;font-weight:600;">18K</div></div>
+        </div>
+        <div style="font-size:11px;color:#555;">Demo figures for presentation</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HERO MOBILE -->
+  <section style="max-width:1000px;margin:0 auto;padding:0 40px;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">07 — HERO, MOBILE</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 32px;">Vertical, image second</h2>
+  </section>
+  <section style="max-width:1000px;margin:0 auto 96px;padding:0 40px;display:flex;justify-content:center;">
+    <div style="width:390px;background:#0c0c0c;border-radius:24px;overflow:hidden;border:1px solid #1a1a1a;">
+      <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;">NOVA</div>
+        <div style="font-size:12px;font-weight:600;letter-spacing:0.06em;color:#9A9A9A;">MENU</div>
+      </div>
+      <div style="padding:32px 24px 0;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.14em;color:#C7FF3D;margin-bottom:16px;">CREATOR · STREAMER · DIGITAL BRAND</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:600;line-height:1;margin:0 0 20px;">CREATE.<br>CONNECT.<br>MONETIZE.</h1>
+        <p style="font-size:15px;color:#9A9A9A;line-height:1.6;margin:0 0 24px;">Content, community and everything in between — all in one place.</p>
+      </div>
+      <div style="position:relative;height:320px;margin:0 24px;border-radius:14px;overflow:hidden;">
+        <image-slot id="hero-photo-mobile" shape="rect" placeholder="Same cinematic portrait, cropped tighter"></image-slot>
+        <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,8,8,0.6) 0%,rgba(8,8,8,0) 45%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:14px;left:14px;background:rgba(17,17,17,0.9);border-radius:8px;padding:10px 14px;">
+          <div style="display:flex;align-items:center;gap:6px;font-size:10px;font-weight:600;letter-spacing:0.06em;color:#C7FF3D;">
+            <span style="width:5px;height:5px;border-radius:50%;background:#C7FF3D;animation:pulse 2s infinite;"></span>LIVE · 12.4K
+          </div>
+        </div>
+      </div>
+      <div style="padding:24px;">
+        <div style="background:#C7FF3D;color:#080808;font-weight:600;font-size:14px;padding:15px;border-radius:4px;text-align:center;margin-bottom:12px;">WATCH LATEST →</div>
+        <div style="display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid #1a1a1a;">
+          <div style="text-align:center;"><div style="font-size:10px;color:#9A9A9A;">YT</div><div style="font-size:13px;font-weight:600;">250K</div></div>
+          <div style="text-align:center;"><div style="font-size:10px;color:#9A9A9A;">TWITCH</div><div style="font-size:13px;font-weight:600;">82K</div></div>
+          <div style="text-align:center;"><div style="font-size:10px;color:#9A9A9A;">TIKTOK</div><div style="font-size:13px;font-weight:600;">410K</div></div>
+          <div style="text-align:center;"><div style="font-size:10px;color:#9A9A9A;">COMM.</div><div style="font-size:13px;font-weight:600;">18K</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 02 -->
+  <section style="max-width:1440px;margin:0 auto;padding:0 40px;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">08 — SECTION 02</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 8px;">What's happening now</h2>
+    <p style="font-size:15px;color:#9A9A9A;margin:0 0 32px;">One composition, one focal point — not four competing cards.</p>
+  </section>
+  <section style="max-width:1440px;margin:0 auto 64px;padding:0 40px;">
+    <div style="background:#0c0c0c;border-radius:16px;padding:56px;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">02 / NOW</div>
+      <h3 style="font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:600;line-height:1.05;margin:0 0 12px;">WHAT'S<br>HAPPENING NOW</h3>
+      <p style="font-size:16px;color:#9A9A9A;margin:0 0 40px;">The latest from the NOVA universe.</p>
+
+      <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:24px;margin-bottom:32px;">
+        <div style="background:#111111;border-radius:14px;padding:0;overflow:hidden;">
+          <div style="height:340px;background:#171717;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px;position:relative;">
+            16:9 cinematic thumbnail
+            <div style="position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(245,245,245,0.12);border:1px solid rgba(245,245,245,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;">▶</div>
+          </div>
+          <div style="padding:28px 32px;">
+            <div style="font-size:12px;color:#9A9A9A;letter-spacing:0.06em;margin-bottom:8px;">NOVA // EP. 047</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:600;margin-bottom:12px;">"I Tried Winning With The Worst Loadout"</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="font-size:13px;color:#9A9A9A;">1.2M views · 3 days ago</div>
+              <div style="font-size:13px;font-weight:600;">WATCH VIDEO →</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#111111;border-radius:14px;padding:32px;display:flex;flex-direction:column;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.06em;color:#C7FF3D;margin-bottom:20px;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#C7FF3D;animation:pulse 2s infinite;"></span>LIVE NOW
+          </div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin-bottom:6px;">NOVA IS LIVE</div>
+          <div style="font-size:14px;color:#9A9A9A;margin-bottom:28px;">Valorant Ranked Grind</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:600;color:#C7FF3D;line-height:1;">12.4K</div>
+          <div style="font-size:12px;color:#9A9A9A;letter-spacing:0.04em;margin-bottom:24px;">WATCHING NOW</div>
+          <div style="margin-top:auto;background:#C7FF3D;color:#080808;font-weight:600;font-size:13px;padding:14px;border-radius:4px;text-align:center;">WATCH LIVE →</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;padding-top:32px;border-top:1px solid #1a1a1a;">
+        <div>
+          <div style="font-size:12px;color:#9A9A9A;letter-spacing:0.06em;margin-bottom:10px;">NEXT UP</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:6px;">FRIDAY · 8:00 PM</div>
+          <div style="font-size:14px;color:#9A9A9A;margin-bottom:14px;">Ranked Night with the community.</div>
+          <div style="font-size:13px;font-weight:600;">ADD TO CALENDAR →</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:#9A9A9A;letter-spacing:0.06em;margin-bottom:14px;">LATEST</div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;gap:16px;font-size:14px;"><span style="color:#C7FF3D;font-weight:600;width:90px;flex-shrink:0;">NEW VIDEO</span><span style="color:#F5F5F5;">I Tried Winning With The Worst Loadout</span></div>
+            <div style="display:flex;gap:16px;font-size:14px;"><span style="color:#C7FF3D;font-weight:600;width:90px;flex-shrink:0;">NEW CLIP</span><span style="color:#F5F5F5;">That reaction was insane</span></div>
+            <div style="display:flex;gap:16px;font-size:14px;"><span style="color:#C7FF3D;font-weight:600;width:90px;flex-shrink:0;">COMMUNITY</span><span style="color:#F5F5F5;">Tournament registrations are open.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESPONSIVE RULES -->
+  <section style="max-width:1000px;margin:0 auto;padding:96px 40px 160px;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.12em;color:#9A9A9A;margin-bottom:12px;">09 — RESPONSIVE RULES</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;margin:0 0 32px;">Rebuilt for mobile, not shrunk</h2>
+    <ul style="margin:0;padding:0;list-style:none;font-size:15px;color:#9A9A9A;line-height:2;">
+      <li><span style="color:#F5F5F5;font-weight:600;">Hero:</span> split-screen becomes stacked — copy first, image second, floating widgets flatten into the image or drop below it.</li>
+      <li><span style="color:#F5F5F5;font-weight:600;">Nav:</span> full link row collapses to NOVA + MENU; live dot moves into the menu sheet, not the bar.</li>
+      <li><span style="color:#F5F5F5;font-weight:600;">Section 02:</span> featured video → live/next-stream state → next up → latest activity, single column, full-width cards.</li>
+      <li><span style="color:#F5F5F5;font-weight:600;">Ecosystem strip:</span> four platforms in a tight 2×2 grid rather than one row.</li>
+      <li><span style="color:#F5F5F5;font-weight:600;">Touch targets:</span> all CTAs ≥44px tall; no hover-only affordances.</li>
+    </ul>
+  </section>
+
+</div>
+
+</x-dc>
+</body>
+</html>
