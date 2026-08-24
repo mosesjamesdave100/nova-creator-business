@@ -1,25 +1,106 @@
-# CODING AGENTS: READ THIS FIRST
+# NOVA — Creator Business Platform
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+NOVA is a creator monetization platform: a public marketing site plus an
+authenticated dashboard that brings a creator's content, audience,
+sponsorships, store and revenue into one place instead of six different
+platform dashboards.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+Dark editorial visual system (near-black background, lime accent, large
+Space Grotesk display type, minimal borders) carried consistently across
+the public site and the product itself.
 
-## What you should do — IMPORTANT
+## Tech stack
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+- **React 19** + **Vite** + **React Router v7** (`HashRouter`)
+- **Tailwind CSS v4** (`@tailwindcss/vite`, tokens defined in `src/index.css`'s `@theme` block)
+- **oxlint** for linting
+- No backend: the entire app runs against realistic mock data (see [Demo data](#demo-data-vs-live-data) below)
 
-**Read `project/NOVA Design Direction.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+## Getting started
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+```bash
+npm install
+npm run dev       # start the dev server
+npm run build     # production build to dist/
+npm run preview   # serve the production build locally
+npm run lint      # oxlint
+```
 
-## About the design files
+## Project structure
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+```
+src/
+  pages/              Top-level routed pages (HomePage, CreatorProfilePage)
+  components/         Public marketing site sections (Hero, Nav, landing/*)
+  components/profile  Public creator profile (/creator/:username) sections
+  dashboard/          Authenticated app: sidebar, topbar, every dashboard page
+  onboarding/         5-step first-run onboarding flow (/onboarding)
+  data/               Single source of truth for all mock data - every
+                      number shown anywhere in the app is derived from here,
+                      never hardcoded in a component
+  integrations/       Mock provider adapters (youtube/twitch/tiktok/
+                      instagram/discord/shopify/stripe) - the eventual real
+                      API boundary, see below
+  hooks/              Shared hooks (scroll-reveal, click-outside, etc.)
+```
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+## Routes
 
-## Bundle contents
+**Public site** (marketing, no auth):
+- `/` — homepage
+- `/creator/:username` — public creator profile (media kit CTA, merch, socials)
+- `/onboarding` — first-run setup wizard, ends at `/dashboard`
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Dave Design direction review` project files (HTML prototypes, assets, components)
+**Product** (dashboard, shares one sidebar/topbar shell):
+`/dashboard`, `/analytics`, `/audience`, `/revenue`, `/sponsorships`
+(Brand Deals), `/shop` (Store), `/community`, `/content-planner`,
+`/insights`, `/media-kit`, `/integrations`, `/settings`.
+
+Routes not yet built (`/community`, `/settings`) render a `ComingSoon`
+placeholder rather than a broken page or dead link.
+
+## Demo data vs. live data
+
+Every number in the product — revenue, followers, sponsorship deals,
+notifications — is realistic mock data, generated deterministically from
+`src/data/*.js`. This is intentional and always visible:
+
+- A **"DEMO MODE"** badge sits in the dashboard topbar on every page.
+- The sidebar identifies the account as a **"Sample Workspace"**.
+- `src/data/connections.js` models three real connection states per
+  provider (`connected` / `needs_attention` / `not_connected`) so the UI
+  already demonstrates what a disconnected or expired connection looks like
+  (see the Integrations and Audience pages) without pretending any of it is
+  a live account.
+
+### Where a real integration plugs in
+
+`src/integrations/<provider>/index.js` (one file per platform) is the
+adapter boundary. Every adapter exports the same shape — `getConnectionStatus()`
+plus a few async data methods — and every method already resolves from
+`src/data/*.js` after a simulated network delay (`mockDelay()`). A real
+integration means rewriting the *inside* of these functions to call the
+provider's actual API (OAuth, pagination, rate limits); every call site
+already `await`s these functions, so no page changes when that happens.
+
+## Design system
+
+Tokens live in `src/index.css`'s `@theme` block (`--color-bg`, `--color-accent`,
+etc.) and generate Tailwind utilities directly (`bg-accent`, `text-muted`, …).
+Shared primitives (`IconChip`, `Sparkline`, `StatusBadge`, `EmptyState`,
+`CategoryBarList`, charts) live in `src/dashboard/` and are reused across
+every dashboard page and several landing sections, so the product reads as
+one system rather than one-off pages.
+
+## Responsive behavior
+
+Every page is designed mobile-first with intentional recomposition, not
+naive shrinking: the sidebar becomes a slide-over menu, data tables become
+stacked cards (Brand Deals, Store, Sponsorships), and the Content Planner's
+week view stacks into a single column.
+
+---
+
+`docs/design-handoff/` contains the original Claude Design handoff bundle
+(chat transcripts and HTML prototypes) this product was built from. It's
+historical reference, not part of the running app.
