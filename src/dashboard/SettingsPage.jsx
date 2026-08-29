@@ -10,6 +10,8 @@ import {
   securityInfo,
   billingInfo,
   appearanceSettings,
+  teamMembers as INITIAL_TEAM,
+  TEAM_ROLES,
 } from "../data/settings";
 import { connectedAccounts as INITIAL_ACCOUNTS } from "../data/connectedAccounts";
 import { PLATFORMS } from "../data/platforms";
@@ -19,6 +21,7 @@ const CATEGORIES = [
   { id: "profile", label: "Profile", icon: "users" },
   { id: "notifications", label: "Notifications", icon: "bell" },
   { id: "connected", label: "Connected Accounts", icon: "integrations" },
+  { id: "team", label: "Team", icon: "memberships" },
   { id: "privacy", label: "Privacy", icon: "alert" },
   { id: "security", label: "Security", icon: "check" },
   { id: "billing", label: "Billing", icon: "payout" },
@@ -314,6 +317,108 @@ function ConnectedAccountsSection() {
   );
 }
 
+const TEAM_STATUS_TONE = { Active: "good", Invited: "warning" };
+
+function InviteMemberForm({ onCancel, onInvite }) {
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState(TEAM_ROLES[0]);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!email.trim()) return;
+    onInvite({ email: email.trim(), role });
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3 rounded-lg border border-hairline p-4 sm:flex-row sm:items-center">
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email address"
+        autoFocus
+        className={`${inputClass} sm:flex-1`}
+      />
+      <select value={role} onChange={(e) => setRole(e.target.value)} className={inputClass}>
+        {TEAM_ROLES.map((r) => (
+          <option key={r} value={r}>
+            {r}
+          </option>
+        ))}
+      </select>
+      <div className="flex gap-2">
+        <button type="submit" className="rounded bg-accent px-4 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]">
+          Send invite
+        </button>
+        <button type="button" onClick={onCancel} className="rounded border border-hairline px-4 py-2.5 text-[13px] font-semibold text-text hover:border-[#333]">
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
+}
+
+function TeamSection() {
+  const [members, setMembers] = useState(INITIAL_TEAM);
+  const [showInvite, setShowInvite] = useState(false);
+  const [saved, flash] = useSavedMessage();
+
+  function handleInvite({ email, role }) {
+    setMembers((prev) => [...prev, { id: `team-${Date.now()}`, name: email, email, role, status: "Invited" }]);
+    setShowInvite(false);
+    flash(`Invite sent to ${email}.`);
+  }
+
+  function handleRemove(id) {
+    setMembers((prev) => prev.filter((m) => m.id !== id));
+    flash("Team member removed.");
+  }
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="font-display text-lg font-semibold">Team</h2>
+          <p className="mt-1 text-sm text-muted">Manage who has access to your NOVA workspace.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowInvite((v) => !v)}
+          className="flex shrink-0 items-center gap-1.5 rounded bg-accent px-4 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]"
+        >
+          <Icon name="plus" size={13} />
+          INVITE MEMBER
+        </button>
+      </div>
+      <SaveBanner message={saved} />
+
+      {showInvite && <InviteMemberForm onCancel={() => setShowInvite(false)} onInvite={handleInvite} />}
+
+      <div className="mt-5 flex flex-col divide-y divide-hairline rounded-lg border border-hairline">
+        {members.map((member) => (
+          <div key={member.id} className="flex items-center justify-between gap-3 px-4 py-3.5">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 text-sm text-text">
+                {member.name}
+                <StatusBadge label={member.status} tone={TEAM_STATUS_TONE[member.status]} />
+              </div>
+              <div className="mt-0.5 truncate text-xs text-muted">{member.email}</div>
+            </div>
+            <div className="flex shrink-0 items-center gap-3">
+              <span className="text-[13px] text-muted">{member.role}</span>
+              {member.role !== "Owner" && (
+                <button type="button" onClick={() => handleRemove(member.id)} className="text-[12px] font-semibold text-danger hover:underline">
+                  Remove
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function PrivacySection() {
   const [form, setForm] = useState(privacySettings);
   const [saved, flash] = useSavedMessage();
@@ -355,9 +460,32 @@ function PrivacySection() {
   );
 }
 
+function DeleteAccountModal({ onClose }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+      <div className="w-full max-w-sm rounded-xl border border-hairline bg-surface-2 p-6 text-center shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)]">
+        <Icon name="alert" size={22} className="mx-auto text-danger" />
+        <h3 className="mt-3 font-display text-base font-semibold">Delete account</h3>
+        <p className="mt-2 text-[13px] leading-relaxed text-muted">
+          Account deletion isn't available in this prototype yet. Reach out to support when this becomes a real,
+          connected account.
+        </p>
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-5 w-full rounded bg-accent py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]"
+        >
+          Got it
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function SecuritySection() {
   const [twoFactor, setTwoFactor] = useState(securityInfo.twoFactorEnabled);
   const [sessions, setSessions] = useState(securityInfo.activeSessions);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [saved, flash] = useSavedMessage();
 
   function signOutSession(id) {
@@ -422,6 +550,40 @@ function SecuritySection() {
           ))}
         </div>
       </div>
+
+      <div className="mt-5 rounded-lg border border-hairline p-4">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <div className="text-sm text-text">Data export</div>
+            <div className="mt-0.5 text-xs text-muted">Download a copy of your NOVA account data.</div>
+          </div>
+          <button
+            type="button"
+            onClick={() => flash("Your data export will be emailed to you within 24 hours.")}
+            className="shrink-0 rounded border border-hairline px-3.5 py-2 text-[13px] font-semibold text-text hover:border-[#333]"
+          >
+            Export data
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-lg border border-danger/25 bg-danger/[0.04] p-4">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <div className="text-sm text-text">Delete account</div>
+            <div className="mt-0.5 text-xs text-muted">Permanently delete your account and all associated data.</div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowDeleteConfirm(true)}
+            className="shrink-0 rounded border border-danger/40 px-3.5 py-2 text-[13px] font-semibold text-danger hover:bg-danger/10"
+          >
+            Delete account
+          </button>
+        </div>
+      </div>
+
+      {showDeleteConfirm && <DeleteAccountModal onClose={() => setShowDeleteConfirm(false)} />}
     </div>
   );
 }
@@ -516,6 +678,7 @@ const SECTION_COMPONENTS = {
   profile: ProfileSection,
   notifications: NotificationsSection,
   connected: ConnectedAccountsSection,
+  team: TeamSection,
   privacy: PrivacySection,
   security: SecuritySection,
   billing: BillingSection,

@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { IconChip } from "./IconChip";
 import { CategoryBarList } from "./CategoryBarList";
 import { Reveal } from "./Reveal";
+import { PageLinkButton } from "./PageLinkButton";
 import { creatorProfile } from "../data/creatorProfile";
 import { socialLinks } from "../data/socialLinks";
 import { PLATFORMS } from "../data/platforms";
@@ -43,10 +44,13 @@ export function MediaKitPage() {
 
   return (
     <div className="mx-auto max-w-[1800px] px-5 py-6 md:px-8 md:py-8">
-      <p className="mb-6 max-w-2xl text-sm text-muted">
-        A shareable snapshot of your audience and platform stats for brand outreach. Generated from the same data as
-        the rest of this dashboard, download it as a PDF or share the link directly.
-      </p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <p className="max-w-2xl text-sm text-muted">
+          A shareable snapshot of your audience and platform stats for brand outreach. Generated from the same data as
+          the rest of this dashboard, download it as a PDF or share the link directly.
+        </p>
+        <PageLinkButton to="/sponsorships" label="View brand deals" />
+      </div>
 
       <Reveal index={0} className="rounded-xl border border-hairline bg-surface p-6 md:p-8">
         <div className="flex flex-wrap items-start justify-between gap-6">

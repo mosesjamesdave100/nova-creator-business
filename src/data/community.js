@@ -38,3 +38,17 @@ export const communityEngagementSeries = {
     noise: 0.06,
   }),
 };
+
+// Member count over the same window, ending at today's memberCount and
+// starting `newMembersCount` lower - the same +642 this page's overview
+// card already shows, just spread across the period instead of one number.
+export const communityMemberGrowthSeries = {
+  dates: Array.from({ length: ENGAGEMENT_DAYS }, (_, i) => dayLabel(i, ENGAGEMENT_DAYS)),
+  values: buildTrendSeries({
+    days: ENGAGEMENT_DAYS,
+    start: discordServer.memberCount - communityOverview.newMembersCount,
+    end: discordServer.memberCount,
+    seed: 471,
+    noise: 0.01,
+  }),
+};

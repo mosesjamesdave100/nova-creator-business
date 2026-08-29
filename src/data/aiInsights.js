@@ -10,8 +10,9 @@
 //   recommendation - a concrete next action, derived from the same numbers
 import { content } from "./content";
 import { audienceActivityByHour } from "./audience";
-import { sources as revenueSources } from "./revenue";
+import { sources as revenueSources, ranges as revenueRanges } from "./revenue";
 import { average } from "./random";
+import { currency } from "./format";
 
 function timeOfDayBucket(hour) {
   if (hour < 12) return "morning";
@@ -165,12 +166,31 @@ function computeSponsorshipGrowth() {
   };
 }
 
+function computeOverallRevenueGrowth() {
+  const range = revenueRanges["30d"];
+
+  return {
+    id: "overall-revenue-growth",
+    category: "Revenue",
+    title: "Total revenue is trending up",
+    body: `Your total revenue reached ${currency.format(range.total)} over the last 30 days, up ${range.deltaPct}% from the previous period across every source combined.`,
+    recommendation: "Revisit your full revenue mix regularly, not just sponsorships, merch and memberships are both growing faster than your average source.",
+    metricLabel: "Revenue growth (30d)",
+    metricValue: `+${range.deltaPct}%`,
+    sampleSize: null,
+    trend: "up",
+    whyItMatters: "Growth spread across multiple sources means your business is compounding rather than depending on one channel.",
+    action: { label: "View revenue", to: "/revenue" },
+  };
+}
+
 export const insights = [
   computeShortsVsLongform(),
   computeAudienceActiveWindow(),
   computeSponsorshipGrowth(),
   computeBestPublishingWindow(),
   computeRetentionTrend(),
+  computeOverallRevenueGrowth(),
 ];
 
 export function insightByCategory(category) {

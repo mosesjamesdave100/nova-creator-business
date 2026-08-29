@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Reveal } from "./Reveal";
 import { StatusBadge } from "./StatusBadge";
+import { PageLinkButton } from "./PageLinkButton";
 import { PROVIDERS } from "../integrations";
 import { CONNECTION_STATE, CONNECTION_STATE_LABEL, DEMO_MODE } from "../data/connections";
 import { audiencePlatforms } from "../data/audience";
@@ -151,11 +152,17 @@ export function IntegrationsPage() {
 
   return (
     <div className="mx-auto max-w-[1800px] px-5 py-6 md:px-8 md:py-8">
-      <p className="mb-4 max-w-2xl text-sm text-muted">
-        Connect the platforms NOVA pulls data from. These are mock connections for this prototype (acting on one only
-        changes what's shown here), a real integration would run OAuth against each provider and swap the adapters in{" "}
-        <code className="rounded bg-surface-2 px-1 py-0.5 text-xs">src/integrations/</code>.
-      </p>
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
+        <p className="max-w-2xl text-sm text-muted">
+          Connect the platforms NOVA pulls data from. These are mock connections for this prototype (acting on one
+          only changes what's shown here), a real integration would run OAuth against each provider and swap the
+          adapters in <code className="rounded bg-surface-2 px-1 py-0.5 text-xs">src/integrations/</code>.
+        </p>
+        <div className="flex shrink-0 gap-2">
+          <PageLinkButton to="/analytics" label="View analytics" />
+          <PageLinkButton to="/revenue" label="View revenue" />
+        </div>
+      </div>
 
       {DEMO_MODE && (
         <div className="mb-6 flex items-center gap-2 rounded-md border border-hairline bg-surface-2 px-3.5 py-2.5 text-[13px] text-muted">

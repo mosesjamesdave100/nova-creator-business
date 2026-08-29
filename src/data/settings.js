@@ -54,6 +54,14 @@ export const billingInfo = {
   paymentMethod: "Visa •••• 4242",
 };
 
+export const TEAM_ROLES = ["Manager", "Editor", "Viewer"];
+
+export const teamMembers = [
+  { id: "team-1", name: creatorProfile.name, email: generalSettings.email, role: "Owner", status: "Active" },
+  { id: "team-2", name: "Maya Fontaine", email: "maya@novacreator.com", role: "Manager", status: "Active" },
+  { id: "team-3", name: "Chris Okafor", email: "chris@novacreator.com", role: "Editor", status: "Invited" },
+];
+
 export const appearanceSettings = {
   theme: "Dark",
   compactMode: false,

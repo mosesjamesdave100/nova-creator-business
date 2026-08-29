@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Icon } from "./Icon";
 import { EmptyState } from "./EmptyState";
+import { PageLinkButton } from "./PageLinkButton";
 import { PIPELINE_STAGES, sponsorships as INITIAL_DEALS } from "../data/sponsorships";
 import { currencyWhole } from "../data/format";
 
@@ -172,14 +173,17 @@ export function SponsorshipsPage() {
           Every brand deal moves through one pipeline: Lead, Negotiating, Active, Delivered, Paid. This is a
           manually-logged record, not something a platform API supplies.
         </p>
-        <button
-          type="button"
-          onClick={() => setShowForm((v) => !v)}
-          className="flex shrink-0 items-center gap-1.5 rounded bg-accent px-4 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]"
-        >
-          <Icon name="plus" size={14} />
-          NEW DEAL
-        </button>
+        <div className="flex shrink-0 gap-2">
+          <PageLinkButton to="/media-kit" label="Update media kit" />
+          <button
+            type="button"
+            onClick={() => setShowForm((v) => !v)}
+            className="flex shrink-0 items-center gap-1.5 rounded bg-accent px-4 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]"
+          >
+            <Icon name="plus" size={14} />
+            NEW DEAL
+          </button>
+        </div>
       </div>
 
       {showForm && (

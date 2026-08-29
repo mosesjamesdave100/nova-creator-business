@@ -4,6 +4,7 @@ import { Icon } from "./Icon";
 import { IconChip } from "./IconChip";
 import { Reveal } from "./Reveal";
 import { EmptyState } from "./EmptyState";
+import { PageLinkButton } from "./PageLinkButton";
 import { CONTENT_TYPES, scheduledContent as INITIAL_SCHEDULED, draftContent as INITIAL_DRAFTS } from "../data/contentPlanner";
 
 // Anchored to this prototype's fixed "today" (see currentDate in the session
@@ -140,14 +141,17 @@ export function ContentPlannerPage() {
           Plan what's going out across every platform in one calendar. This is a plain editable plan for now, a real
           integration would let you publish directly to YouTube Studio, Twitch and TikTok from here.
         </p>
-        <button
-          type="button"
-          onClick={() => setShowForm((v) => !v)}
-          className="flex shrink-0 items-center gap-1.5 rounded bg-accent px-4 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]"
-        >
-          <Icon name="plus" size={14} />
-          CREATE CONTENT
-        </button>
+        <div className="flex shrink-0 gap-2">
+          <PageLinkButton to="/analytics" label="View analytics" />
+          <button
+            type="button"
+            onClick={() => setShowForm((v) => !v)}
+            className="flex shrink-0 items-center gap-1.5 rounded bg-accent px-4 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]"
+          >
+            <Icon name="plus" size={14} />
+            CREATE CONTENT
+          </button>
+        </div>
       </div>
 
       {showForm && (

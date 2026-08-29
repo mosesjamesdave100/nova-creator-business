@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { IconChip } from "./IconChip";
 import { LineChart } from "./LineChart";
 import { Reveal } from "./Reveal";
+import { PageLinkButton } from "./PageLinkButton";
 import { ranges, defaultRange, sources, totalRevenue30d, recentTransactions } from "../data/revenue";
 import { currency, currencyWhole, formatCompactCurrency } from "../data/format";
 
@@ -52,10 +53,13 @@ export function RevenuePage() {
 
   return (
     <div className="mx-auto max-w-[1800px] px-5 py-6 md:px-8 md:py-8">
-      <p className="mb-6 max-w-2xl text-sm text-muted">
-        Full business revenue by source (broader than the Overview snapshot, this includes ad revenue and
-        sponsorships). Mock data for this prototype, connect Stripe and Shopify under Integrations to replace it.
-      </p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <p className="max-w-2xl text-sm text-muted">
+          Full business revenue by source (broader than the Overview snapshot, this includes ad revenue and
+          sponsorships). Mock data for this prototype, connect Stripe and Shopify under Integrations to replace it.
+        </p>
+        <PageLinkButton to="/sponsorships" label="View brand deals" />
+      </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_400px]">
         <Reveal index={0} className="rounded-xl border border-hairline bg-surface p-5 md:p-7">

@@ -3,6 +3,7 @@ import { LineChart } from "./LineChart";
 import { CategoryBarList } from "./CategoryBarList";
 import { TopContentList } from "./TopContentList";
 import { Reveal } from "./Reveal";
+import { PageLinkButton } from "./PageLinkButton";
 import { combinedSeries, seriesDates } from "../data/audience";
 import { performanceByFormat } from "../data/content";
 import { formatCompactNumber } from "../data/format";
@@ -25,10 +26,13 @@ export function ContentAnalyticsPage() {
 
   return (
     <div className="mx-auto max-w-[1800px] px-5 py-6 md:px-8 md:py-8">
-      <p className="mb-6 max-w-2xl text-sm text-muted">
-        How your content is performing across formats and platforms. Mock data for this prototype, wire up
-        Content Analytics to each platform's content API to replace it.
-      </p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <p className="max-w-2xl text-sm text-muted">
+          How your content is performing across formats and platforms. Mock data for this prototype, wire up
+          Content Analytics to each platform's content API to replace it.
+        </p>
+        <PageLinkButton to="/insights" label="View insights" />
+      </div>
 
       <Reveal index={0} className="rounded-xl border border-hairline bg-surface p-5 md:p-7">
         <div className="flex flex-wrap items-start justify-between gap-4">
