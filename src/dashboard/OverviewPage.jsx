@@ -5,6 +5,7 @@ import { ActivityFeed } from "./ActivityFeed";
 import { ProductList } from "./ProductList";
 import { AudienceOverview } from "./AudienceOverview";
 import { TodaysPriorities } from "./TodaysPriorities";
+import { NovaOpportunities } from "./NovaOpportunities";
 import { QuickActions } from "./QuickActions";
 import { CommunityCTA } from "./CommunityCTA";
 import { LiveStatus } from "./LiveStatus";
@@ -21,6 +22,10 @@ export function OverviewPage() {
           </Reveal>
         ))}
       </div>
+
+      <Reveal index={5} className="mt-6">
+        <NovaOpportunities />
+      </Reveal>
 
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1fr_340px]">
         <div className="flex flex-col gap-6">

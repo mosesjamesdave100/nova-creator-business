@@ -12,6 +12,8 @@ import { AIInsightsPage } from "./dashboard/AIInsightsPage";
 import { IntegrationsPage } from "./dashboard/IntegrationsPage";
 import { MediaKitPage } from "./dashboard/MediaKitPage";
 import { ContentPlannerPage } from "./dashboard/ContentPlannerPage";
+import { CommunityPage } from "./dashboard/CommunityPage";
+import { SettingsPage } from "./dashboard/SettingsPage";
 import { ComingSoon } from "./dashboard/ComingSoon";
 import { OnboardingFlow } from "./onboarding/OnboardingFlow";
 import { NAV_ITEMS } from "./dashboard/navigation";
@@ -29,6 +31,8 @@ const BUILT_ROUTES = {
   "media-kit": MediaKitPage,
   integrations: IntegrationsPage,
   "content-planner": ContentPlannerPage,
+  community: CommunityPage,
+  settings: SettingsPage,
 };
 
 export default function App() {

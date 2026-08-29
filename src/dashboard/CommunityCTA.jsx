@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export function CommunityCTA() {
   return (
     <div className="relative overflow-hidden rounded-xl border border-hairline bg-surface">
@@ -7,12 +9,12 @@ export function CommunityCTA() {
           <p className="mt-2.5 max-w-sm text-sm leading-relaxed text-muted">
             Create exclusive content and grow closer with your biggest fans.
           </p>
-          <a
-            href="#"
+          <Link
+            to="/community"
             className="mt-6 inline-block rounded bg-accent px-5 py-3 text-sm font-semibold text-bg transition-transform hover:scale-[1.02]"
           >
-            CREATE MEMBERSHIP →
-          </a>
+            GO TO COMMUNITY →
+          </Link>
         </div>
 
         <div className="grain relative hidden min-h-[160px] overflow-hidden sm:block">

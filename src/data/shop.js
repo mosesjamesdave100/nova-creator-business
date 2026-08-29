@@ -26,7 +26,7 @@ const RAW_PRODUCTS = [
     inventoryStatus: "In stock",
     revenue30d: 1028,
     orders30d: 38,
-    trendPct: 14,
+    trendPct: 18,
   },
   {
     id: "creator-pack",
