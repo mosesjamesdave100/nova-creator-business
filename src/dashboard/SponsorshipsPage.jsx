@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Icon } from "./Icon";
 import { EmptyState } from "./EmptyState";
 import { PIPELINE_STAGES, sponsorships as INITIAL_DEALS } from "../data/sponsorships";
@@ -146,8 +147,11 @@ function NewDealForm({ onCancel, onCreate }) {
 }
 
 export function SponsorshipsPage() {
+  const location = useLocation();
   const [deals, setDeals] = useState(INITIAL_DEALS);
-  const [showForm, setShowForm] = useState(false);
+  // "+ Add Brand Deal" in Quick Actions deep-links here with router state
+  // asking the form to already be open.
+  const [showForm, setShowForm] = useState(() => Boolean(location.state?.openForm));
 
   function handleCreate(deal) {
     setDeals((prev) => [...prev, { id: `sp-${Date.now()}`, ...deal }]);

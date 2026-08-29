@@ -4,8 +4,7 @@ import { RevenueSources } from "./RevenueSources";
 import { ActivityFeed } from "./ActivityFeed";
 import { ProductList } from "./ProductList";
 import { AudienceOverview } from "./AudienceOverview";
-import { RecommendedActions } from "./RecommendedActions";
-import { UpcomingOpportunities } from "./UpcomingOpportunities";
+import { TodaysPriorities } from "./TodaysPriorities";
 import { QuickActions } from "./QuickActions";
 import { CommunityCTA } from "./CommunityCTA";
 import { LiveStatus } from "./LiveStatus";
@@ -48,18 +47,15 @@ export function OverviewPage() {
 
         <div className="flex flex-col gap-6">
           <Reveal index={6}>
-            <RecommendedActions />
+            <TodaysPriorities />
           </Reveal>
           <Reveal index={7}>
-            <UpcomingOpportunities />
-          </Reveal>
-          <Reveal index={8}>
             <RevenueSources />
           </Reveal>
-          <Reveal index={9}>
+          <Reveal index={8}>
             <AudienceOverview />
           </Reveal>
-          <Reveal index={10}>
+          <Reveal index={9}>
             <LiveStatus />
           </Reveal>
         </div>

@@ -44,7 +44,8 @@ function computeShortsVsLongform() {
     metricValue: `${ratio.toFixed(1)}×`,
     sampleSize: `${shorts.length} Shorts · ${longform.length} long-form videos`,
     trend: "up",
-    action: { label: "Create Short", to: "/content-planner" },
+    whyItMatters: "Short-form content is currently your strongest discovery channel, it's how most new viewers find you.",
+    action: { label: "Create content plan", to: "/content-planner" },
   };
 }
 
@@ -83,6 +84,9 @@ function computeBestPublishingWindow() {
     metricValue: windowTitleCase,
     sampleSize: best ? `${best.count} videos in this window` : null,
     trend: "up",
+    whyItMatters: best
+      ? "Publishing outside this window means even strong content may launch before your audience is around to watch it."
+      : "A reliable publishing window helps every future upload launch to an audience that's already there.",
     action: { label: "Plan next upload", to: "/content-planner" },
   };
 }
@@ -105,6 +109,7 @@ function computeRetentionTrend() {
     metricValue: `${avgRecent.toFixed(0)}%`,
     sampleSize: `${recent.length} recent vs. ${previous.length} prior videos`,
     trend: upliftPct >= 0 ? "up" : "down",
+    whyItMatters: "Better retention signals to platform algorithms that your content is worth recommending, compounding your reach on every future upload.",
     action: { label: "View content analytics", to: "/analytics" },
   };
 }
@@ -137,6 +142,7 @@ function computeAudienceActiveWindow() {
     metricValue: windowLabel,
     sampleSize: null,
     trend: "up",
+    whyItMatters: "Uploading before this window gives your content the best chance to catch your audience while they're already engaged.",
     action: { label: "Schedule post", to: "/content-planner" },
   };
 }
@@ -154,6 +160,7 @@ function computeSponsorshipGrowth() {
     metricValue: `+${sponsorship.deltaPct}%`,
     sampleSize: null,
     trend: "up",
+    whyItMatters: "Demand from brands is outpacing what you're currently charging, this is where your business is growing fastest right now.",
     action: { label: "View brand deals", to: "/sponsorships" },
   };
 }

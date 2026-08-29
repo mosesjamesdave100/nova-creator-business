@@ -98,6 +98,7 @@ export const totalOrders30d = RAW_PRODUCTS.reduce((sum, p) => sum + p.orders30d,
 // mocked here as a plain number since NOVA doesn't host the storefront itself.
 export const storeVisits30d = 4150;
 export const conversionRatePct = (totalOrders30d / storeVisits30d) * 100;
+export const conversionRateDeltaPct = 18;
 
 export const products = RAW_PRODUCTS.map((p, i) => ({
   ...p,

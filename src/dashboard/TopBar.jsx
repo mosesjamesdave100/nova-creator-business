@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { Icon } from "./Icon";
 import { IconChip } from "./IconChip";
 import { Avatar } from "./Avatar";
 import { useClickOutside } from "../hooks/useClickOutside";
 import { DEMO_MODE } from "../data/connections";
 import { notifications as INITIAL_NOTIFICATIONS, NOTIFICATION_CATEGORIES } from "../data/notifications";
+import { GlobalSearch } from "./GlobalSearch";
 
 const DATE_PRESETS = ["Today", "Last 7 days", "Last 30 days", "Last 90 days"];
 
@@ -64,6 +66,11 @@ function Notifications() {
     setItems((prev) => prev.map((n) => ({ ...n, read: true })));
   }
 
+  function handleSelect(id) {
+    markRead(id);
+    setOpen(false);
+  }
+
   return (
     <div ref={ref} className="relative">
       <button
@@ -93,10 +100,10 @@ function Notifications() {
             {items.map((n) => {
               const meta = NOTIFICATION_CATEGORIES[n.category];
               return (
-                <button
+                <Link
                   key={n.id}
-                  type="button"
-                  onClick={() => markRead(n.id)}
+                  to={n.cta.to}
+                  onClick={() => handleSelect(n.id)}
                   className={`flex items-start gap-3 border-b border-hairline px-4 py-3 text-left last:border-0 transition-colors hover:bg-surface ${
                     n.read ? "" : "bg-accent/[0.04]"
                   }`}
@@ -108,9 +115,12 @@ function Notifications() {
                       {!n.read && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />}
                     </div>
                     <div className={`mt-1 text-[13px] leading-snug ${n.read ? "text-muted" : "text-text"}`}>{n.detail}</div>
-                    <div className="mt-1 text-[11px] text-faint">{n.time}</div>
+                    <div className="mt-1.5 flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-faint">{n.time}</span>
+                      <span className="text-[11px] font-semibold text-accent">{n.cta.label} &rarr;</span>
+                    </div>
                   </div>
-                </button>
+                </Link>
               );
             })}
           </div>
@@ -183,6 +193,7 @@ export function TopBar({ title, subtitle, onOpenSidebar }) {
       </div>
 
       <div className="flex items-center gap-3">
+        <GlobalSearch />
         <DateSelector />
         <Notifications />
         <ProfileMenu />

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Icon } from "./Icon";
 import { IconChip } from "./IconChip";
 import { Reveal } from "./Reveal";
@@ -108,9 +109,13 @@ function CreateContentForm({ onCancel, onCreate }) {
 }
 
 export function ContentPlannerPage() {
+  const location = useLocation();
   const [scheduled, setScheduled] = useState(INITIAL_SCHEDULED);
   const [drafts, setDrafts] = useState(INITIAL_DRAFTS);
-  const [showForm, setShowForm] = useState(false);
+  // Quick Actions ("+ New Content" / "Schedule Post") can deep-link here with
+  // router state asking the form to already be open, so the action feels
+  // like it did something rather than just landing on the page.
+  const [showForm, setShowForm] = useState(() => Boolean(location.state?.openForm));
 
   const days = Array.from({ length: WEEK_LENGTH }, (_, i) => addDays(TODAY_ISO, i));
 

@@ -16,6 +16,7 @@ export const notifications = [
     detail: "Pulse Audio sent you a $6,000 offer.",
     time: "18 min ago",
     read: false,
+    cta: { label: "Review offer", to: "/sponsorships" },
   },
   {
     id: "n-2",
@@ -23,6 +24,7 @@ export const notifications = [
     detail: "Your latest Short is outperforming your average by 184%.",
     time: "1 hr ago",
     read: false,
+    cta: { label: "View performance", to: "/analytics" },
   },
   {
     id: "n-3",
@@ -30,6 +32,7 @@ export const notifications = [
     detail: "Your viewers are 22% more active this week.",
     time: "3 hr ago",
     read: false,
+    cta: { label: "View audience", to: "/audience" },
   },
   {
     id: "n-4",
@@ -37,6 +40,7 @@ export const notifications = [
     detail: "$900 sponsorship payment received.",
     time: "1 day ago",
     read: true,
+    cta: { label: "View revenue", to: "/revenue" },
   },
   {
     id: "n-5",
@@ -44,6 +48,7 @@ export const notifications = [
     detail: "$1,240.00 payout sent to your linked account.",
     time: "1 day ago",
     read: true,
+    cta: { label: "View revenue", to: "/revenue" },
   },
   {
     id: "n-6",
@@ -51,5 +56,6 @@ export const notifications = [
     detail: "3 new members joined INSIDER Tier.",
     time: "2 days ago",
     read: true,
+    cta: { label: "View community", to: "/community" },
   },
 ];

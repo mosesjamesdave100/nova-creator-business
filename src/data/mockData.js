@@ -237,10 +237,3 @@ export const liveStatus = {
   watching: "12.4K",
 };
 
-export const quickActions = [
-  { id: "add-product", label: "Add Product" },
-  { id: "create-drop", label: "Create Drop" },
-  { id: "new-post", label: "New Post" },
-  { id: "go-live", label: "Go Live" },
-  { id: "view-analytics", label: "View Analytics" },
-];

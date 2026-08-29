@@ -13,12 +13,14 @@ function InsightCard({ insight }) {
           <IconChip icon="sparkle" tone="accent" size={38} />
           <div>
             <div className="text-[11px] font-semibold tracking-[0.08em] text-muted">
-              {insight.category.toUpperCase()} · WHAT HAPPENED
+              {insight.category.toUpperCase()} · WHAT'S HAPPENING
             </div>
             <h3 className="mt-1.5 font-display text-lg font-semibold">{insight.title}</h3>
-            <div className="mt-3 text-[10px] font-semibold tracking-[0.08em] text-faint">DATA</div>
-            <p className="mt-1 text-sm leading-relaxed text-muted">{insight.body}</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{insight.body}</p>
             {insight.sampleSize && <p className="mt-2 text-xs text-faint">Based on {insight.sampleSize}</p>}
+
+            <div className="mt-4 text-[10px] font-semibold tracking-[0.08em] text-faint">WHY IT MATTERS</div>
+            <p className="mt-1 text-sm leading-relaxed text-muted">{insight.whyItMatters}</p>
           </div>
         </div>
         <div className="shrink-0 text-right">
