@@ -119,3 +119,19 @@ export const totalViews30d = audiencePlatforms.reduce((sum, p) => sum + p.views3
 export const blendedEngagementRatePct =
   audiencePlatforms.reduce((sum, p) => sum + p.engagementRatePct, 0) / audiencePlatforms.length;
 export const blendedEngagementDeltaPct = 0.6;
+
+// New vs. returning viewers over the last 30 days. A real integration would
+// pull this split from each platform's analytics endpoint the same way
+// audienceActivityByHour above would be.
+export const newVsReturning = { newPct: 42, returningPct: 58 };
+
+// Audience interest categories, the kind of "what else do they watch"
+// affinity data YouTube/TikTok analytics surface. Hand-authored demo data,
+// no real integration produces this yet.
+export const audienceInterests = [
+  { id: "gaming", label: "Gaming", value: 64 },
+  { id: "tech", label: "Tech Reviews", value: 41 },
+  { id: "comedy", label: "Comedy", value: 33 },
+  { id: "lifestyle", label: "Lifestyle", value: 22 },
+  { id: "music", label: "Music", value: 18 },
+];

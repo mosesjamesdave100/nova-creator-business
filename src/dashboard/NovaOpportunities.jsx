@@ -30,6 +30,7 @@ function OpportunityCard({ opportunity }) {
         </div>
         <Link
           to={opportunity.action.to}
+          state={opportunity.action.state}
           className="mt-3 flex items-center justify-center gap-1.5 rounded border border-accent/40 py-2.5 text-[12px] font-semibold uppercase tracking-[0.04em] text-accent transition-colors hover:bg-accent hover:text-bg"
         >
           {opportunity.action.label}

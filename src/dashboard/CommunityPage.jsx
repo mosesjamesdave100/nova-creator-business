@@ -67,6 +67,7 @@ function ComposeModal({ mode, onClose, onSubmit }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title"
+            aria-label="Title"
             autoFocus
             className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text placeholder:text-faint focus:border-accent focus:outline-none"
           />
@@ -74,6 +75,7 @@ function ComposeModal({ mode, onClose, onSubmit }) {
             value={detail}
             onChange={(e) => setDetail(e.target.value)}
             placeholder={copy.detailLabel}
+            aria-label={copy.detailLabel}
             className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text placeholder:text-faint focus:border-accent focus:outline-none"
           />
         </div>

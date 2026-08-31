@@ -15,6 +15,21 @@ function topBarCopyFor(pathname) {
   return { title: match ? match.label : "Dashboard", subtitle: undefined };
 }
 
+// Wraps each route's content in the same fade-up used elsewhere, swapping to
+// a plain resting class once it finishes so the transform retained by
+// animation-fill-mode: forwards doesn't linger - a lingering transform turns
+// this wrapper into a CSS containing block, trapping any `position: fixed`
+// modal rendered anywhere on the page instead of letting it center on the
+// real viewport (see the .reveal rules in index.css).
+function RouteReveal({ children }) {
+  const [done, setDone] = useState(false);
+  return (
+    <div className={`reveal ${done ? "is-done" : "is-in"}`} onAnimationEnd={() => setDone(true)}>
+      {children}
+    </div>
+  );
+}
+
 export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { pathname } = useLocation();
@@ -40,9 +55,9 @@ export function DashboardLayout() {
           <TopBar title={title} subtitle={subtitle} onOpenSidebar={() => setSidebarOpen(true)} />
         </div>
         <div id="dashboard-scroll" className="flex-1 overflow-y-auto">
-          <div key={pathname} className="reveal is-in">
+          <RouteReveal key={pathname}>
             <Outlet />
-          </div>
+          </RouteReveal>
         </div>
       </div>
     </div>

@@ -127,6 +127,7 @@ export function GlobalSearch() {
                 onChange={(e) => handleQueryChange(e.target.value)}
                 onKeyDown={handleInputKeyDown}
                 placeholder="Search content, brand deals, products, insights…"
+                aria-label="Search NOVA"
                 className="w-full bg-transparent text-sm text-text placeholder:text-faint focus:outline-none"
               />
               <button

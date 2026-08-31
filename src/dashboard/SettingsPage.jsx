@@ -336,10 +336,11 @@ function InviteMemberForm({ onCancel, onInvite }) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email address"
+        aria-label="Invite email address"
         autoFocus
         className={`${inputClass} sm:flex-1`}
       />
-      <select value={role} onChange={(e) => setRole(e.target.value)} className={inputClass}>
+      <select value={role} onChange={(e) => setRole(e.target.value)} aria-label="Role" className={inputClass}>
         {TEAM_ROLES.map((r) => (
           <option key={r} value={r}>
             {r}

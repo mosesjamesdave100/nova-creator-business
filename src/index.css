@@ -69,6 +69,17 @@ body {
   animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Once the entrance animation finishes, swap to a plain (non-animated,
+   non-transformed) resting state. A `transform` value retained via
+   animation-fill-mode: forwards would otherwise permanently create a CSS
+   containing block on this element - since every routed dashboard page is
+   wrapped in one of these, any `position: fixed` modal rendered anywhere on
+   the page would center within the page's full scrollable height instead of
+   the actual viewport. */
+.reveal.is-done {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;

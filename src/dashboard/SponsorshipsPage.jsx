@@ -88,6 +88,7 @@ function NewDealForm({ onCancel, onCreate }) {
           value={form.brand}
           onChange={(e) => update("brand", e.target.value)}
           placeholder="Brand name"
+          aria-label="Brand name"
           autoFocus
           className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text placeholder:text-faint focus:border-accent focus:outline-none"
         />
@@ -95,6 +96,7 @@ function NewDealForm({ onCancel, onCreate }) {
           value={form.campaign}
           onChange={(e) => update("campaign", e.target.value)}
           placeholder="Campaign (optional)"
+          aria-label="Campaign"
           className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text placeholder:text-faint focus:border-accent focus:outline-none"
         />
         <input
@@ -103,11 +105,13 @@ function NewDealForm({ onCancel, onCreate }) {
           value={form.value}
           onChange={(e) => update("value", e.target.value)}
           placeholder="Deal value ($)"
+          aria-label="Deal value in dollars"
           className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text placeholder:text-faint focus:border-accent focus:outline-none"
         />
         <select
           value={form.stage}
           onChange={(e) => update("stage", e.target.value)}
+          aria-label="Pipeline stage"
           className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text focus:border-accent focus:outline-none"
         >
           {PIPELINE_STAGES.map((s) => (
@@ -120,18 +124,21 @@ function NewDealForm({ onCancel, onCreate }) {
           value={form.deliverables}
           onChange={(e) => update("deliverables", e.target.value)}
           placeholder="Deliverables"
+          aria-label="Deliverables"
           className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text placeholder:text-faint focus:border-accent focus:outline-none md:col-span-2"
         />
         <input
           type="date"
           value={form.deadline}
           onChange={(e) => update("deadline", e.target.value)}
+          aria-label="Deadline"
           className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text focus:border-accent focus:outline-none"
         />
         <input
           value={form.notes}
           onChange={(e) => update("notes", e.target.value)}
           placeholder="Notes"
+          aria-label="Notes"
           className="rounded-md border border-hairline bg-bg px-3.5 py-2.5 text-sm text-text placeholder:text-faint focus:border-accent focus:outline-none"
         />
       </div>

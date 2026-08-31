@@ -46,7 +46,11 @@ function computeShortsVsLongform() {
     sampleSize: `${shorts.length} Shorts · ${longform.length} long-form videos`,
     trend: "up",
     whyItMatters: "Short-form content is currently your strongest discovery channel, it's how most new viewers find you.",
-    action: { label: "Create content plan", to: "/content-planner" },
+    action: {
+      label: "Create content plan",
+      to: "/content-planner",
+      state: { openForm: true, prefill: { title: "New Short (recommended by NOVA)", type: "youtube-short", status: "Idea" } },
+    },
   };
 }
 
@@ -88,7 +92,11 @@ function computeBestPublishingWindow() {
     whyItMatters: best
       ? "Publishing outside this window means even strong content may launch before your audience is around to watch it."
       : "A reliable publishing window helps every future upload launch to an audience that's already there.",
-    action: { label: "Plan next upload", to: "/content-planner" },
+    action: {
+      label: "Plan next upload",
+      to: "/content-planner",
+      state: { openForm: true, prefill: { title: "Long-form upload for your best window", type: "youtube-video", status: "Idea" } },
+    },
   };
 }
 
@@ -144,7 +152,14 @@ function computeAudienceActiveWindow() {
     sampleSize: null,
     trend: "up",
     whyItMatters: "Uploading before this window gives your content the best chance to catch your audience while they're already engaged.",
-    action: { label: "Schedule post", to: "/content-planner" },
+    action: {
+      label: "Schedule post",
+      to: "/content-planner",
+      state: {
+        openForm: true,
+        prefill: { title: "Upload timed to your peak audience window", type: "youtube-video", time: recommendedHour, status: "Idea" },
+      },
+    },
   };
 }
 

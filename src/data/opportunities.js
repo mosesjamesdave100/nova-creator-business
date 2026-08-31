@@ -22,7 +22,7 @@ export const opportunities = [
     explanation: `Your Shorts generated ${contentInsight.metricValue} more views than your long-form videos over the selected period.`,
     whyItMatters: contentInsight.whyItMatters,
     recommendation: "Publish 2 additional Shorts this week using topics from your highest-performing videos.",
-    action: { label: "Create content plan", to: "/content-planner" },
+    action: { label: "Create content plan", to: "/content-planner", state: contentInsight.action.state },
   },
   {
     id: "audience",
@@ -32,7 +32,7 @@ export const opportunities = [
     explanation: "Viewer activity is consistently higher during this period.",
     whyItMatters: audienceInsight.whyItMatters,
     recommendation: "Schedule your next major upload around 8 PM.",
-    action: { label: "Plan next upload", to: "/content-planner" },
+    action: { label: "Plan next upload", to: "/content-planner", state: audienceInsight.action.state },
   },
   {
     id: "revenue",

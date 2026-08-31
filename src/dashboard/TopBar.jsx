@@ -140,6 +140,7 @@ function ProfileMenu() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        aria-label="Account menu"
         className="flex items-center gap-2 rounded-md py-1 pl-1 pr-2 transition-colors hover:bg-surface"
       >
         <Avatar size={32} />

@@ -4,7 +4,7 @@ import { IconChip } from "./IconChip";
 import { Reveal } from "./Reveal";
 import { insights } from "../data/aiInsights";
 
-function InsightCard({ insight }) {
+export function InsightCard({ insight }) {
   const positive = insight.trend === "up";
   return (
     <div className="rounded-xl border border-hairline bg-surface p-5 md:p-7">
@@ -45,6 +45,7 @@ function InsightCard({ insight }) {
         {insight.action && (
           <Link
             to={insight.action.to}
+            state={insight.action.state}
             className="shrink-0 rounded border border-accent/40 px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.04em] text-accent transition-colors hover:bg-accent hover:text-bg"
           >
             {insight.action.label} &rarr;
