@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { Avatar } from "./Avatar";
 import { StatusBadge } from "./StatusBadge";
 import {
-  generalSettings,
   profileSettings,
   notificationPreferences,
   privacySettings,
@@ -15,6 +14,10 @@ import {
 } from "../data/settings";
 import { connectedAccounts as INITIAL_ACCOUNTS } from "../data/connectedAccounts";
 import { PLATFORMS } from "../data/platforms";
+import { CREATOR_CATEGORIES, TIMEZONES, CURRENCIES } from "../data/onboarding";
+import { useAuth } from "../context/AuthContext";
+import { updateProfile } from "../services/profileService";
+import { listConnectedAccounts } from "../services/connectedAccountsService";
 
 const CATEGORIES = [
   { id: "general", label: "General", icon: "settings" },
@@ -82,18 +85,80 @@ function useSavedMessage() {
 }
 
 function GeneralSection() {
-  const [form, setForm] = useState(generalSettings);
+  const { user, profile, refreshProfile } = useAuth();
+  const [form, setForm] = useState({
+    displayName: profile?.display_name ?? "",
+    username: profile?.username ?? "",
+    category: profile?.category ?? CREATOR_CATEGORIES[0],
+    timezone: profile?.timezone ?? TIMEZONES[0],
+    currency: profile?.currency ?? CURRENCIES[0],
+  });
   const [saved, flash] = useSavedMessage();
+  const [error, setError] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [connectedCount, setConnectedCount] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    if (user) {
+      listConnectedAccounts(user.id).then(({ accounts }) => {
+        if (active) setConnectedCount(accounts.filter((a) => a.status === "connected").length);
+      });
+    }
+    return () => {
+      active = false;
+    };
+  }, [user]);
 
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  async function handleSave() {
+    setSaving(true);
+    setError(null);
+    const { error: saveError } = await updateProfile(user.id, {
+      display_name: form.displayName.trim(),
+      username: form.username.trim() || null,
+      category: form.category,
+      timezone: form.timezone,
+      currency: form.currency,
+    });
+    setSaving(false);
+    if (saveError) {
+      setError(saveError);
+      return;
+    }
+    await refreshProfile();
+    flash("Changes saved.");
   }
 
   return (
     <div>
       <h2 className="font-display text-lg font-semibold">General</h2>
       <p className="mt-1 text-sm text-muted">Your account's basic details.</p>
+
+      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="rounded-lg border border-hairline bg-bg p-3.5">
+          <div className="text-[11px] font-semibold tracking-[0.08em] text-muted">ACCOUNT EMAIL</div>
+          <div className="mt-1 truncate text-sm text-text">{user?.email}</div>
+        </div>
+        <div className="rounded-lg border border-hairline bg-bg p-3.5">
+          <div className="text-[11px] font-semibold tracking-[0.08em] text-muted">ONBOARDING</div>
+          <div className="mt-1 text-sm text-text">{profile?.onboarding_completed ? "Complete" : "Incomplete"}</div>
+        </div>
+        <div className="rounded-lg border border-hairline bg-bg p-3.5">
+          <div className="text-[11px] font-semibold tracking-[0.08em] text-muted">CONNECTED PLATFORMS</div>
+          <div className="mt-1 text-sm text-text">{connectedCount === null ? "…" : `${connectedCount} of 7`}</div>
+        </div>
+      </div>
+
       <SaveBanner message={saved} />
+      {error && (
+        <div className="mb-5 rounded-md border border-danger/25 bg-danger/[0.06] px-3.5 py-2.5 text-[13px] text-danger">
+          {error}
+        </div>
+      )}
       <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
         <Field label="Creator display name">
           <input className={inputClass} value={form.displayName} onChange={(e) => update("displayName", e.target.value)} />
@@ -102,22 +167,29 @@ function GeneralSection() {
           <input className={inputClass} value={form.username} onChange={(e) => update("username", e.target.value)} />
         </Field>
         <Field label="Email">
-          <input type="email" className={inputClass} value={form.email} onChange={(e) => update("email", e.target.value)} />
+          <input type="email" disabled value={user?.email ?? ""} className={`${inputClass} cursor-not-allowed opacity-60`} />
+        </Field>
+        <Field label="Creator category">
+          <select className={inputClass} value={form.category} onChange={(e) => update("category", e.target.value)}>
+            {CREATOR_CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="Timezone">
           <select className={inputClass} value={form.timezone} onChange={(e) => update("timezone", e.target.value)}>
-            {[form.timezone, "America/New_York (EST)", "America/Los_Angeles (PST)", "UTC"]
-              .filter((v, i, arr) => arr.indexOf(v) === i)
-              .map((tz) => (
-                <option key={tz} value={tz}>
-                  {tz}
-                </option>
-              ))}
+            {TIMEZONES.map((tz) => (
+              <option key={tz} value={tz}>
+                {tz}
+              </option>
+            ))}
           </select>
         </Field>
         <Field label="Default currency">
           <select className={inputClass} value={form.currency} onChange={(e) => update("currency", e.target.value)}>
-            {[form.currency, "EUR (€)", "GBP (£)"].filter((v, i, arr) => arr.indexOf(v) === i).map((c) => (
+            {CURRENCIES.map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>
@@ -127,21 +199,46 @@ function GeneralSection() {
       </div>
       <button
         type="button"
-        onClick={() => flash("Changes saved.")}
-        className="mt-6 rounded bg-accent px-5 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]"
+        onClick={handleSave}
+        disabled={saving}
+        className="mt-6 rounded bg-accent px-5 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        SAVE CHANGES
+        {saving ? "SAVING…" : "SAVE CHANGES"}
       </button>
     </div>
   );
 }
 
 function ProfileSection() {
-  const [form, setForm] = useState({ displayName: profileSettings.displayName, bio: profileSettings.bio, website: profileSettings.website });
+  const { user, profile, refreshProfile } = useAuth();
+  const [form, setForm] = useState({
+    displayName: profile?.display_name ?? "",
+    bio: profile?.bio ?? "",
+    website: profile?.website ?? "",
+  });
   const [saved, flash] = useSavedMessage();
+  const [error, setError] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  async function handleSave() {
+    setSaving(true);
+    setError(null);
+    const { error: saveError } = await updateProfile(user.id, {
+      display_name: form.displayName.trim(),
+      bio: form.bio.trim(),
+      website: form.website.trim(),
+    });
+    setSaving(false);
+    if (saveError) {
+      setError(saveError);
+      return;
+    }
+    await refreshProfile();
+    flash("Profile saved.");
   }
 
   return (
@@ -149,6 +246,11 @@ function ProfileSection() {
       <h2 className="font-display text-lg font-semibold">Profile</h2>
       <p className="mt-1 text-sm text-muted">How you appear on your public creator profile and media kit.</p>
       <SaveBanner message={saved} />
+      {error && (
+        <div className="mb-5 rounded-md border border-danger/25 bg-danger/[0.06] px-3.5 py-2.5 text-[13px] text-danger">
+          {error}
+        </div>
+      )}
 
       <div className="mt-5 flex items-center gap-4">
         <Avatar size={64} />
@@ -195,10 +297,11 @@ function ProfileSection() {
 
       <button
         type="button"
-        onClick={() => flash("Profile saved.")}
-        className="mt-6 rounded bg-accent px-5 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02]"
+        onClick={handleSave}
+        disabled={saving}
+        className="mt-6 rounded bg-accent px-5 py-2.5 text-[13px] font-semibold text-bg transition-transform hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
       >
-        SAVE PROFILE
+        {saving ? "SAVING…" : "SAVE PROFILE"}
       </button>
     </div>
   );

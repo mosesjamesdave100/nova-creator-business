@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Icon } from "./Icon";
 import { IconChip } from "./IconChip";
 import { Avatar } from "./Avatar";
 import { useClickOutside } from "../hooks/useClickOutside";
+import { useAuth } from "../context/AuthContext";
 import { DEMO_MODE } from "../data/connections";
 import { notifications as INITIAL_NOTIFICATIONS, NOTIFICATION_CATEGORIES } from "../data/notifications";
 import { GlobalSearch } from "./GlobalSearch";
@@ -134,6 +135,14 @@ function ProfileMenu() {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   useClickOutside(ref, () => setOpen(false), open);
+  const navigate = useNavigate();
+  const { profile, signOut } = useAuth();
+
+  async function handleSignOut() {
+    setOpen(false);
+    await signOut();
+    navigate("/login", { replace: true });
+  }
 
   return (
     <div ref={ref} className="relative">
@@ -147,17 +156,24 @@ function ProfileMenu() {
         <Icon name="chevronDown" size={14} className={`text-muted transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="absolute right-0 z-20 mt-2 w-48 overflow-hidden rounded-md border border-hairline bg-surface-2 py-1.5 shadow-[0_20px_40px_-16px_rgba(0,0,0,0.6)]">
-          {["View profile", "Account settings", "Log out"].map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setOpen(false)}
-              className="flex w-full px-3.5 py-2 text-left text-sm text-text hover:bg-surface"
-            >
-              {item}
-            </button>
-          ))}
+        <div className="absolute right-0 z-20 mt-2 w-52 overflow-hidden rounded-md border border-hairline bg-surface-2 py-1.5 shadow-[0_20px_40px_-16px_rgba(0,0,0,0.6)]">
+          {profile?.email && (
+            <div className="truncate border-b border-hairline px-3.5 pb-2 pt-1 text-xs text-faint">{profile.email}</div>
+          )}
+          <Link
+            to="/settings"
+            onClick={() => setOpen(false)}
+            className="flex w-full px-3.5 py-2 text-left text-sm text-text hover:bg-surface"
+          >
+            Account settings
+          </Link>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="flex w-full px-3.5 py-2 text-left text-sm text-danger hover:bg-surface"
+          >
+            Sign out
+          </button>
         </div>
       )}
     </div>

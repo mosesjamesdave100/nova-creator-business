@@ -1,10 +1,10 @@
 import { OptionCard } from "../OptionCard";
-import { GROWTH_FOCUS } from "../../data/onboarding";
+import { CREATOR_GOALS } from "../../data/onboarding";
 
-export function StepGrowthFocus({ value, onToggle }) {
+export function StepGoals({ value, onToggle }) {
   return (
     <div className="flex flex-col gap-3">
-      {GROWTH_FOCUS.map((goal) => (
+      {CREATOR_GOALS.map((goal) => (
         <OptionCard key={goal.id} option={goal} selected={value.includes(goal.id)} onClick={() => onToggle(goal.id)} />
       ))}
     </div>

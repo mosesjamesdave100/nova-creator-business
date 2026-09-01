@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Local environment secrets (Supabase URL/keys) - .env.example is the only
+# env file that should ever be committed.
+.env
+.env.local
+.env.*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

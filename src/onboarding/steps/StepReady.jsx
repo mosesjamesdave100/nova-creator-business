@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Icon } from "../../dashboard/Icon";
-import { CREATE_TYPES, GROWTH_FOCUS } from "../../data/onboarding";
-import { PLATFORMS } from "../../data/platforms";
+import { CREATOR_GOALS } from "../../data/onboarding";
 
 const GENERATE_STEPS = [
   "Setting up your creator profile",
-  "Linking your connected platforms",
+  "Saving your goals",
   "Personalizing your dashboard",
 ];
 
@@ -14,7 +13,7 @@ function GeneratingList() {
 
   useEffect(() => {
     if (visibleCount >= GENERATE_STEPS.length) return;
-    const timer = setTimeout(() => setVisibleCount((v) => v + 1), 500);
+    const timer = setTimeout(() => setVisibleCount((v) => v + 1), 450);
     return () => clearTimeout(timer);
   }, [visibleCount]);
 
@@ -42,15 +41,27 @@ function GeneratingList() {
   );
 }
 
-export function StepReady({ createType, connected, growthFocus, onFinish }) {
+export function StepReady({ profile, goals, onFinish }) {
   const [ready, setReady] = useState(false);
-  const typeLabel = CREATE_TYPES.find((t) => t.id === createType)?.label;
-  const focusLabels = growthFocus.map((id) => GROWTH_FOCUS.find((g) => g.id === id)?.label).join(", ");
+  const [finishing, setFinishing] = useState(false);
+  const [error, setError] = useState(null);
+  const goalLabels = goals.map((id) => CREATOR_GOALS.find((g) => g.id === id)?.label).join(", ");
 
   useEffect(() => {
-    const timer = setTimeout(() => setReady(true), 1700);
+    const timer = setTimeout(() => setReady(true), 1400);
     return () => clearTimeout(timer);
   }, []);
+
+  async function handleFinish() {
+    setFinishing(true);
+    setError(null);
+    const result = await onFinish();
+    if (result?.error) {
+      setError(result.error);
+      setFinishing(false);
+    }
+    // On success, the parent navigates away - no need to reset local state.
+  }
 
   if (!ready) {
     return (
@@ -68,36 +79,43 @@ export function StepReady({ createType, connected, growthFocus, onFinish }) {
             <Icon name="check" size={16} />
           </span>
           <div>
-            <div className="text-sm font-semibold text-text">Your NOVA workspace is ready.</div>
-            <div className="text-[13px] text-muted">Built from what you told us, edit any of this later in Settings.</div>
+            <div className="text-sm font-semibold text-text">You&rsquo;re ready to go.</div>
+            <div className="text-[13px] text-muted">
+              NOVA will bring your creator business into one place and help you understand what to do next.
+            </div>
           </div>
         </div>
 
         <div className="mt-6 flex flex-col divide-y divide-hairline border-t border-hairline">
           <div className="flex items-center justify-between py-3.5 text-sm">
-            <span className="text-muted">You create</span>
-            <span className="font-medium text-text">{typeLabel}</span>
+            <span className="text-muted">Creator name</span>
+            <span className="font-medium text-text">{profile.displayName || "Not set"}</span>
           </div>
           <div className="flex items-center justify-between py-3.5 text-sm">
-            <span className="text-muted">Connected</span>
-            <span className="font-medium text-text">
-              {connected.length > 0 ? connected.map((id) => PLATFORMS[id].name).join(", ") : "None yet"}
-            </span>
+            <span className="text-muted">Category</span>
+            <span className="font-medium text-text">{profile.category}</span>
           </div>
           <div className="flex items-center justify-between py-3.5 text-sm">
-            <span className="text-muted">Growing</span>
-            <span className="font-medium text-text">{focusLabels}</span>
+            <span className="text-muted">Focused on</span>
+            <span className="font-medium text-text">{goalLabels || "Not set"}</span>
           </div>
         </div>
       </div>
 
+      {error && (
+        <div className="rounded-md border border-danger/25 bg-danger/[0.06] px-3.5 py-2.5 text-[13px] text-danger">
+          {error}
+        </div>
+      )}
+
       <button
         type="button"
-        onClick={onFinish}
-        className="flex w-full items-center justify-center gap-2 rounded-md bg-accent py-3.5 text-sm font-semibold text-bg transition-transform hover:scale-[1.01]"
+        onClick={handleFinish}
+        disabled={finishing}
+        className="flex w-full items-center justify-center gap-2 rounded-md bg-accent py-3.5 text-sm font-semibold text-bg transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
       >
-        ENTER NOVA
-        <Icon name="arrowRight" size={15} />
+        {finishing ? "Setting up your workspace…" : "Go to Dashboard"}
+        {!finishing && <Icon name="arrowRight" size={15} />}
       </button>
     </div>
   );

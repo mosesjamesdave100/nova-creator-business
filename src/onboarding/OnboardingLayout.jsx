@@ -1,22 +1,20 @@
-const TOTAL_STEPS = 5;
-
 // Deliberately not DashboardLayout - onboarding runs before a creator has a
 // dashboard to show, so it gets its own minimal chrome (wordmark + progress)
 // instead of the sidebar/topbar shell.
-export function OnboardingLayout({ step, title, subtitle, children, footer }) {
+export function OnboardingLayout({ step, totalSteps, title, subtitle, children, footer }) {
   return (
     <div className="flex min-h-screen flex-col bg-bg text-text">
       <div className="border-b border-hairline px-5 py-5 md:px-8">
         <div className="mx-auto flex max-w-[720px] items-center justify-between">
           <span className="font-display text-lg font-bold tracking-[0.02em]">NOVA</span>
           <span className="text-xs text-muted">
-            Step {step} of {TOTAL_STEPS}
+            Step {step} of {totalSteps}
           </span>
         </div>
         <div className="mx-auto mt-4 h-1 max-w-[720px] overflow-hidden rounded-full bg-surface-2">
           <div
             className="h-full rounded-full bg-accent transition-[width] duration-500 ease-out"
-            style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+            style={{ width: `${(step / totalSteps) * 100}%` }}
           />
         </div>
       </div>

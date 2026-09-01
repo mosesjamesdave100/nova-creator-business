@@ -10,11 +10,14 @@ import { QuickActions } from "./QuickActions";
 import { CommunityCTA } from "./CommunityCTA";
 import { LiveStatus } from "./LiveStatus";
 import { Reveal } from "./Reveal";
+import { ConnectPlatformsBanner } from "./ConnectPlatformsBanner";
 import { kpis, kpiComparisonLabel } from "../data/mockData";
 
 export function OverviewPage() {
   return (
     <div className="mx-auto max-w-[1800px] px-5 py-6 md:px-8 md:py-8">
+      <ConnectPlatformsBanner />
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-5 lg:grid-cols-5">
         {kpis.map((kpi, i) => (
           <Reveal key={kpi.id} index={i}>

@@ -3,6 +3,7 @@ import { Icon } from "./Icon";
 import { Avatar } from "./Avatar";
 import { NAV_ITEMS } from "./navigation";
 import { creator } from "../data/mockData";
+import { useAuth } from "../context/AuthContext";
 
 function NavRow({ item, onNavigate }) {
   return (
@@ -35,6 +36,10 @@ function NavRow({ item, onNavigate }) {
 }
 
 export function Sidebar({ onNavigate }) {
+  const { profile } = useAuth();
+  const accountName = profile?.display_name || creator.name;
+  const accountSubtitle = profile?.email || "Sample Workspace";
+
   return (
     <div className="flex h-full flex-col bg-[#0a0a0a]">
       <div className="flex items-center justify-between px-5 pb-6 pt-6">
@@ -69,8 +74,8 @@ export function Sidebar({ onNavigate }) {
         <div className="mt-1 flex items-center gap-3 rounded-md px-3 py-2.5">
           <Avatar size={32} />
           <div className="min-w-0">
-            <div className="truncate text-sm font-medium text-text">NOVA</div>
-            <div className="truncate text-xs text-muted">Sample Workspace</div>
+            <div className="truncate text-sm font-medium text-text">{accountName}</div>
+            <div className="truncate text-xs text-muted">{accountSubtitle}</div>
           </div>
         </div>
       </div>
