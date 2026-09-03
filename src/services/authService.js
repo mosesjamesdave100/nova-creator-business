@@ -5,12 +5,18 @@
 import { supabase } from "../lib/supabaseClient";
 import { mapAuthError } from "./authErrors";
 
-export async function signUp({ email, password, displayName }) {
+// `emailRedirectTo` should point at the deployed app's own origin (see the
+// analogous comment on requestPasswordReset below) so the confirmation link
+// lands back on whichever environment the user actually signed up from,
+// instead of whatever Site URL happens to be configured as the project-wide
+// Supabase dashboard default.
+export async function signUp({ email, password, displayName, emailRedirectTo }) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: { display_name: displayName || null },
+      emailRedirectTo,
     },
   });
   if (error) return { data: null, error: mapAuthError(error) };

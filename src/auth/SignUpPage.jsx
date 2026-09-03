@@ -34,7 +34,10 @@ export function SignUpPage() {
 
     setError(null);
     setLoading(true);
-    const { data, error: signUpError } = await signUp({ email, password });
+    // Lands on this same app's #/login route - see
+    // src/auth/handleRecoveryRedirect.js for why that's not a plain redirect.
+    const emailRedirectTo = `${window.location.origin}${window.location.pathname}#/login`;
+    const { data, error: signUpError } = await signUp({ email, password, emailRedirectTo });
     setLoading(false);
 
     if (signUpError) {
