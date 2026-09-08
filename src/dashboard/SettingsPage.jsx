@@ -12,8 +12,7 @@ import {
   teamMembers as INITIAL_TEAM,
   TEAM_ROLES,
 } from "../data/settings";
-import { connectedAccounts as INITIAL_ACCOUNTS } from "../data/connectedAccounts";
-import { PLATFORMS } from "../data/platforms";
+import { PLATFORMS, CONNECTABLE_PROVIDER_IDS } from "../data/platforms";
 import { CREATOR_CATEGORIES, TIMEZONES, CURRENCIES } from "../data/onboarding";
 import { useAuth } from "../context/AuthContext";
 import { updateProfile } from "../services/profileService";
@@ -373,47 +372,107 @@ function ConnectModal({ platformName, onClose }) {
   );
 }
 
+function ConnectedAccountsErrorBanner({ onRetry }) {
+  return (
+    <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-danger/25 bg-danger/[0.06] px-3.5 py-2.5 text-[13px] text-danger">
+      Unable to load your connected accounts.
+      <button type="button" onClick={onRetry} className="font-semibold hover:underline">
+        Retry
+      </button>
+    </div>
+  );
+}
+
+function ConnectedAccountsSkeleton() {
+  return (
+    <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="rounded-xl border border-hairline bg-bg p-4">
+          <div className="h-5 w-24 animate-pulse rounded bg-surface-2" />
+          <div className="mt-4 h-4 w-32 animate-pulse rounded bg-surface-2" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function ConnectedAccountsSection() {
-  const accounts = INITIAL_ACCOUNTS;
+  const { user } = useAuth();
+  // null = still loading; populated once the real query resolves.
+  const [accountsByPlatform, setAccountsByPlatform] = useState(null);
+  const [error, setError] = useState(null);
   const [modalPlatform, setModalPlatform] = useState(null);
+
+  async function load() {
+    if (!user) return;
+    setError(null);
+    setAccountsByPlatform(null);
+    const { accounts, error: loadError } = await listConnectedAccounts(user.id);
+    if (loadError) {
+      setError(loadError);
+      return;
+    }
+    const byPlatform = {};
+    accounts.forEach((account) => {
+      byPlatform[account.platform] = account;
+    });
+    setAccountsByPlatform(byPlatform);
+  }
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <div>
       <h2 className="font-display text-lg font-semibold">Connected Accounts</h2>
       <p className="mt-1 text-sm text-muted">
-        These mirror the connections on the Integrations page. Real OAuth isn't wired up in this prototype.
+        These mirror the connections on the Integrations page. Real OAuth isn't wired up yet, so every platform
+        starts not connected.
       </p>
 
-      <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {accounts.map((account) => (
-          <div key={account.id} className="rounded-xl border border-hairline bg-bg p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span
-                  className="flex h-9 w-9 items-center justify-center rounded-md text-sm font-semibold"
-                  style={{ background: `${account.brandColor}22`, color: account.brandColor }}
-                >
-                  {account.name.charAt(0)}
-                </span>
-                <div>
-                  <div className="text-sm font-semibold text-text">{account.name}</div>
-                  <div className="text-xs text-muted">{account.accountLabel ?? "Not connected"}</div>
+      {error && <ConnectedAccountsErrorBanner onRetry={load} />}
+      {!error && !accountsByPlatform && <ConnectedAccountsSkeleton />}
+      {!error && accountsByPlatform && (
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {CONNECTABLE_PROVIDER_IDS.map((id) => {
+            const row = accountsByPlatform[id];
+            const connected = row?.status === "connected";
+            const platform = PLATFORMS[id];
+            return (
+              <div key={id} className="rounded-xl border border-hairline bg-bg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="flex h-9 w-9 items-center justify-center rounded-md text-sm font-semibold"
+                      style={{ background: `${platform.brandColor}22`, color: platform.brandColor }}
+                    >
+                      {platform.name.charAt(0)}
+                    </span>
+                    <div>
+                      <div className="text-sm font-semibold text-text">{platform.name}</div>
+                      <div className="text-xs text-muted">
+                        {connected ? row.display_name || row.platform_user_id || "Connected" : "Not connected"}
+                      </div>
+                    </div>
+                  </div>
+                  <StatusBadge label={connected ? "Connected" : "Not connected"} tone={connected ? "good" : "muted"} />
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setModalPlatform(platform.name)}
+                  className={`mt-4 w-full rounded border py-2 text-[13px] font-semibold transition-colors ${
+                    connected ? "border-[#333] text-text hover:border-muted" : "border-transparent bg-accent text-bg hover:scale-[1.02]"
+                  }`}
+                >
+                  {connected ? "Manage" : "Connect"}
+                </button>
               </div>
-              <StatusBadge label={account.connected ? "Connected" : "Not connected"} tone={account.connected ? "good" : "muted"} />
-            </div>
-            <button
-              type="button"
-              onClick={() => setModalPlatform(account.name)}
-              className={`mt-4 w-full rounded border py-2 text-[13px] font-semibold transition-colors ${
-                account.connected ? "border-[#333] text-text hover:border-muted" : "border-transparent bg-accent text-bg hover:scale-[1.02]"
-              }`}
-            >
-              {account.connected ? "Manage" : "Connect"}
-            </button>
-          </div>
-        ))}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {modalPlatform && <ConnectModal platformName={modalPlatform} onClose={() => setModalPlatform(null)} />}
     </div>
