@@ -1,0 +1,15 @@
+project_id = "jdficdesgnqpqtzkgryg"
+
+# youtube-oauth-start is called by the authenticated NOVA frontend (a
+# fetch() carrying the user's Supabase access token) - the platform verifies
+# that token before this function's code ever runs.
+[functions.youtube-oauth-start]
+verify_jwt = true
+
+# youtube-oauth-callback is hit directly by Google's redirect (a plain
+# top-level browser navigation with no Supabase session attached), so the
+# platform must not require a Supabase JWT here. The function is only
+# reachable with a valid, single-use `state` value it issued itself - that
+# is what stands in for authentication on this endpoint, not a Supabase JWT.
+[functions.youtube-oauth-callback]
+verify_jwt = false
