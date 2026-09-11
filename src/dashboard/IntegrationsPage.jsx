@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Reveal } from "./Reveal";
 import { StatusBadge } from "./StatusBadge";
 import { PageLinkButton } from "./PageLinkButton";
@@ -12,6 +13,7 @@ import { totalRevenue30d as businessRevenue30d } from "../data/revenue";
 import { formatCompactNumber, currencyWhole } from "../data/format";
 import { useAuth } from "../context/AuthContext";
 import { listConnectedAccounts } from "../services/connectedAccountsService";
+import { startYoutubeConnection } from "../services/youtubeService";
 
 // Key metrics per provider, one line worth glancing at without opening the
 // full Analytics/Revenue page. Derived from the same data those pages read,
@@ -64,7 +66,7 @@ function ComingSoonModal({ platformName, onClose }) {
   );
 }
 
-function ProviderCard({ platform, status, metrics, onAction }) {
+function ProviderCard({ platform, status, metrics, onAction, busy }) {
   if (!status) {
     return (
       <div className="rounded-xl border border-hairline bg-surface p-5">
@@ -106,23 +108,51 @@ function ProviderCard({ platform, status, metrics, onAction }) {
 
       <button
         type="button"
-        onClick={() => onAction(platform.name)}
-        className={`mt-4 w-full rounded border py-2.5 text-[13px] font-semibold transition-colors ${
+        onClick={() => onAction(platform.id, platform.name)}
+        disabled={busy}
+        className={`mt-4 w-full rounded border py-2.5 text-[13px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
           connected ? "border-[#333] text-text hover:border-muted" : "border-transparent bg-accent text-bg hover:scale-[1.02]"
         }`}
       >
-        {connected ? "Manage" : "Connect"}
+        {busy ? "Connecting…" : connected ? "Manage" : "Connect"}
       </button>
     </div>
   );
 }
 
-function ErrorBanner({ onRetry }) {
+const YOUTUBE_RESULT_COPY = {
+  connected: { tone: "accent", message: "YouTube connected." },
+  denied: { tone: "warning", message: "YouTube wasn't connected - the request was declined." },
+  error: { tone: "danger", message: "Something went wrong connecting YouTube. Please try again." },
+};
+
+const YOUTUBE_RESULT_CLASS = {
+  accent: "border-accent/25 bg-accent/[0.06] text-accent",
+  warning: "border-warning/25 bg-warning/10 text-warning",
+  danger: "border-danger/25 bg-danger/[0.06] text-danger",
+};
+
+function YoutubeResultBanner({ result, onDismiss }) {
+  const copy = YOUTUBE_RESULT_COPY[result];
+  if (!copy) return null;
+  return (
+    <div
+      className={`mb-6 flex flex-wrap items-center justify-between gap-3 rounded-md border px-3.5 py-2.5 text-[13px] ${YOUTUBE_RESULT_CLASS[copy.tone]}`}
+    >
+      {copy.message}
+      <button type="button" onClick={onDismiss} className="font-semibold hover:underline">
+        Dismiss
+      </button>
+    </div>
+  );
+}
+
+function ErrorBanner({ message = "Unable to load your connected accounts.", actionLabel = "Retry", onAction }) {
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-md border border-danger/25 bg-danger/[0.06] px-3.5 py-2.5 text-[13px] text-danger">
-      Unable to load your connected accounts.
-      <button type="button" onClick={onRetry} className="font-semibold hover:underline">
-        Retry
+      {message}
+      <button type="button" onClick={onAction} className="font-semibold hover:underline">
+        {actionLabel}
       </button>
     </div>
   );
@@ -134,6 +164,10 @@ export function IntegrationsPage() {
   const [accountsByPlatform, setAccountsByPlatform] = useState(null);
   const [error, setError] = useState(null);
   const [modalPlatform, setModalPlatform] = useState(null);
+  const [connectingYoutube, setConnectingYoutube] = useState(false);
+  const [connectError, setConnectError] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [youtubeResult, setYoutubeResult] = useState(null);
 
   async function load() {
     if (!user) return;
@@ -156,6 +190,47 @@ export function IntegrationsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  // Picks up the fixed connected/denied/error status the Phase 3B callback
+  // redirects back with (#/integrations?youtube=...), then immediately
+  // strips it from the URL so refreshing or sharing the link doesn't replay
+  // the same one-time result. The banner is purely informational - it never
+  // substitutes for the real connected_accounts row below, which is what
+  // load() (re-run here) actually determines the connected state from.
+  useEffect(() => {
+    const result = searchParams.get("youtube");
+    if (!result) return;
+    setYoutubeResult(result);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete("youtube");
+        return next;
+      },
+      { replace: true },
+    );
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  async function handleAction(platformId, platformName) {
+    if (platformId !== "youtube") {
+      setModalPlatform(platformName);
+      return;
+    }
+    if (connectingYoutube) return; // duplicate-click guard
+    setConnectError(null);
+    setConnectingYoutube(true);
+    const { url, error: startError } = await startYoutubeConnection();
+    if (startError || !url) {
+      setConnectError(startError || "We couldn't start the YouTube connection. Please try again.");
+      setConnectingYoutube(false);
+      return;
+    }
+    // Real top-level navigation to Google - the page unloads here, so there's
+    // no local "success" state to fake in the meantime.
+    window.location.href = url;
+  }
+
   const statuses = {};
   if (accountsByPlatform) {
     CONNECTABLE_PROVIDER_IDS.forEach((id) => {
@@ -169,8 +244,8 @@ export function IntegrationsPage() {
     <div className="mx-auto max-w-[1800px] px-5 py-6 md:px-8 md:py-8">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
         <p className="max-w-2xl text-sm text-muted">
-          Connect the platforms NOVA pulls data from. Connection status reflects your real account - real OAuth isn't
-          available yet, so every platform starts not connected and "Connect" tells you what's coming.
+          Connect the platforms NOVA pulls data from. Connection status reflects your real account. YouTube connects
+          for real; the rest are coming soon, and "Connect" tells you what's ahead.
         </p>
         <div className="flex shrink-0 gap-2">
           <PageLinkButton to="/analytics" label="View analytics" />
@@ -186,7 +261,14 @@ export function IntegrationsPage() {
         </div>
       )}
 
-      {error && <ErrorBanner onRetry={load} />}
+      {youtubeResult && (
+        <YoutubeResultBanner result={youtubeResult} onDismiss={() => setYoutubeResult(null)} />
+      )}
+      {connectError && (
+        <ErrorBanner message={connectError} actionLabel="Dismiss" onAction={() => setConnectError(null)} />
+      )}
+
+      {error && <ErrorBanner onAction={load} />}
 
       {!error && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -196,7 +278,8 @@ export function IntegrationsPage() {
                 platform={PLATFORMS[id]}
                 status={statuses[id]}
                 metrics={providerMetrics(id)}
-                onAction={setModalPlatform}
+                onAction={handleAction}
+                busy={id === "youtube" && connectingYoutube}
               />
             </Reveal>
           ))}

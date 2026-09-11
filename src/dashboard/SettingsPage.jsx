@@ -17,6 +17,7 @@ import { CREATOR_CATEGORIES, TIMEZONES, CURRENCIES } from "../data/onboarding";
 import { useAuth } from "../context/AuthContext";
 import { updateProfile } from "../services/profileService";
 import { listConnectedAccounts } from "../services/connectedAccountsService";
+import { startYoutubeConnection } from "../services/youtubeService";
 
 const CATEGORIES = [
   { id: "general", label: "General", icon: "settings" },
@@ -372,12 +373,16 @@ function ConnectModal({ platformName, onClose }) {
   );
 }
 
-function ConnectedAccountsErrorBanner({ onRetry }) {
+function ConnectedAccountsErrorBanner({
+  message = "Unable to load your connected accounts.",
+  actionLabel = "Retry",
+  onRetry,
+}) {
   return (
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-danger/25 bg-danger/[0.06] px-3.5 py-2.5 text-[13px] text-danger">
-      Unable to load your connected accounts.
+      {message}
       <button type="button" onClick={onRetry} className="font-semibold hover:underline">
-        Retry
+        {actionLabel}
       </button>
     </div>
   );
@@ -402,6 +407,8 @@ function ConnectedAccountsSection() {
   const [accountsByPlatform, setAccountsByPlatform] = useState(null);
   const [error, setError] = useState(null);
   const [modalPlatform, setModalPlatform] = useState(null);
+  const [connectingYoutube, setConnectingYoutube] = useState(false);
+  const [connectError, setConnectError] = useState(null);
 
   async function load() {
     if (!user) return;
@@ -424,15 +431,41 @@ function ConnectedAccountsSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  // Reuses the exact same startYoutubeConnection() call the Integrations
+  // page uses - one real OAuth implementation, wired from two menus. The
+  // browser leaves NOVA entirely here (Google, then the Phase 3B callback),
+  // which lands back on #/integrations, not #/settings - that redirect
+  // target is fixed by the already-reviewed Phase 3B backend, not something
+  // this page controls.
+  async function handleAction(platformId, platformName) {
+    if (platformId !== "youtube") {
+      setModalPlatform(platformName);
+      return;
+    }
+    if (connectingYoutube) return; // duplicate-click guard
+    setConnectError(null);
+    setConnectingYoutube(true);
+    const { url, error: startError } = await startYoutubeConnection();
+    if (startError || !url) {
+      setConnectError(startError || "We couldn't start the YouTube connection. Please try again.");
+      setConnectingYoutube(false);
+      return;
+    }
+    window.location.href = url;
+  }
+
   return (
     <div>
       <h2 className="font-display text-lg font-semibold">Connected Accounts</h2>
       <p className="mt-1 text-sm text-muted">
-        These mirror the connections on the Integrations page. Real OAuth isn't wired up yet, so every platform
-        starts not connected.
+        These mirror the connections on the Integrations page. YouTube connects for real; the rest start not
+        connected until real OAuth is wired up for them too.
       </p>
 
       {error && <ConnectedAccountsErrorBanner onRetry={load} />}
+      {connectError && (
+        <ConnectedAccountsErrorBanner message={connectError} actionLabel="Dismiss" onRetry={() => setConnectError(null)} />
+      )}
       {!error && !accountsByPlatform && <ConnectedAccountsSkeleton />}
       {!error && accountsByPlatform && (
         <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -461,12 +494,13 @@ function ConnectedAccountsSection() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setModalPlatform(platform.name)}
-                  className={`mt-4 w-full rounded border py-2 text-[13px] font-semibold transition-colors ${
+                  onClick={() => handleAction(id, platform.name)}
+                  disabled={id === "youtube" && connectingYoutube}
+                  className={`mt-4 w-full rounded border py-2 text-[13px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                     connected ? "border-[#333] text-text hover:border-muted" : "border-transparent bg-accent text-bg hover:scale-[1.02]"
                   }`}
                 >
-                  {connected ? "Manage" : "Connect"}
+                  {id === "youtube" && connectingYoutube ? "Connecting…" : connected ? "Manage" : "Connect"}
                 </button>
               </div>
             );
