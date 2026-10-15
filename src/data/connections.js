@@ -38,7 +38,8 @@ export const CONNECTIONS = {
 };
 
 // Whether the app is showing demo data or data from real connected accounts.
-// Every provider above is mocked, so this is always "demo" today; once even
-// one adapter calls a real API this should flip per-provider rather than
-// globally, but a single flag is honest for the current all-mock state.
+// Every provider above is mocked except YouTube, whose adapter returns live
+// stats (tagged `source: "live"`) once the creator connects it. The rest of
+// the dashboard is still demo data, so this stays true until more adapters
+// go live.
 export const DEMO_MODE = true;
