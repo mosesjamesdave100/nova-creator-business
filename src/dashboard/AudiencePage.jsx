@@ -21,6 +21,7 @@ import { ageBreakdown, genderBreakdown, topLocations } from "../data/demographic
 import { formatCompactNumber } from "../data/format";
 import { CONNECTIONS, CONNECTION_STATE } from "../data/connections";
 import { insightByCategory } from "../data/aiInsights";
+import { useYoutubeChannelStats } from "../hooks/useYoutubeChannelStats";
 
 const RANGES = { "30d": 30, "90d": 90 };
 const HOUR_TICK_LABELS = ["12 AM", "6 AM", "12 PM", "6 PM", "11 PM"];
@@ -86,7 +87,96 @@ function PlatformCard({ platform }) {
   );
 }
 
+const LIVE_ERROR_COPY = {
+  reauth_required: "YouTube access expired. Reconnect to keep your stats syncing.",
+  no_channel: "This Google account doesn't have a YouTube channel yet.",
+};
+
+function PlatformCardSkeleton() {
+  return (
+    <div className="rounded-xl border border-hairline bg-surface p-5">
+      <div className="h-8 w-28 animate-pulse rounded bg-surface-2" />
+      <div className="mt-4 h-7 w-20 animate-pulse rounded bg-surface-2" />
+      <div className="mt-6 h-10 w-full animate-pulse rounded bg-surface-2" />
+    </div>
+  );
+}
+
+// The creator's real YouTube channel, from the youtube-channel-stats Edge
+// Function. Only lifetime totals and recent-upload engagement exist under
+// the read-only scope, so this card shows those instead of the demo card's
+// 30-day figures.
+function YoutubeLiveCard({ platform, stats }) {
+  return (
+    <div className="rounded-xl border border-hairline bg-surface p-5">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <div
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md"
+            style={{ background: `${platform.brandColor}22` }}
+          >
+            <Icon name="play" size={14} style={{ color: platform.brandColor }} />
+          </div>
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-text">{platform.name}</div>
+            {stats.channel && (
+              <div className="truncate text-[11px] text-muted">{stats.channel.handle || stats.channel.title}</div>
+            )}
+          </div>
+        </div>
+        <span className="shrink-0 rounded bg-good/10 px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.06em] text-good">
+          LIVE
+        </span>
+      </div>
+
+      {stats.error ? (
+        <div className="mt-4">
+          <div className="rounded-md border border-warning/25 bg-warning/10 px-3 py-2 text-[11px] text-warning">
+            {LIVE_ERROR_COPY[stats.error] ?? "We couldn't load your YouTube stats right now. Please try again later."}
+          </div>
+          {stats.error === "reauth_required" && (
+            <Link
+              to="/integrations"
+              className="mt-3 block rounded border border-transparent bg-accent py-2 text-center text-[12px] font-semibold text-bg transition-transform hover:scale-[1.02]"
+            >
+              Reconnect {platform.name} &rarr;
+            </Link>
+          )}
+        </div>
+      ) : (
+        <>
+          <div className="mt-4 font-display text-2xl font-semibold leading-none">
+            {stats.followers === null ? "Hidden" : formatCompactNumber(stats.followers)}
+          </div>
+          <div className="mt-2 text-[13px] text-muted">Subscribers</div>
+          <div className="mt-4 grid grid-cols-2 gap-3 border-t border-hairline pt-4 text-xs">
+            <div>
+              <div className="text-muted">Total views</div>
+              <div className="mt-1 font-semibold text-text">
+                {stats.totalViews === null ? "-" : formatCompactNumber(stats.totalViews)}
+              </div>
+            </div>
+            <div>
+              <div className="text-muted">Engagement (recent)</div>
+              <div className="mt-1 font-semibold text-text">
+                {stats.engagementRatePct === null ? "-" : `${stats.engagementRatePct}%`}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function YoutubePlatformCard({ platform, stats }) {
+  if (!stats) return <PlatformCardSkeleton />;
+  if (stats.source === "live") return <YoutubeLiveCard platform={platform} stats={stats} />;
+  return <PlatformCard platform={platform} />;
+}
+
 export function AudiencePage() {
+  const youtubeStats = useYoutubeChannelStats();
   const [range, setRange] = useState("30d");
   const windowSize = RANGES[range];
 
@@ -115,7 +205,11 @@ export function AudiencePage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {audiencePlatforms.map((platform, i) => (
           <Reveal key={platform.id} index={i + 1}>
-            <PlatformCard platform={platform} />
+            {platform.id === "youtube" ? (
+              <YoutubePlatformCard platform={platform} stats={youtubeStats} />
+            ) : (
+              <PlatformCard platform={platform} />
+            )}
           </Reveal>
         ))}
       </div>

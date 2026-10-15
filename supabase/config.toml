@@ -13,3 +13,8 @@ verify_jwt = true
 # is what stands in for authentication on this endpoint, not a Supabase JWT.
 [functions.youtube-oauth-callback]
 verify_jwt = false
+
+# youtube-channel-stats is called by the authenticated NOVA frontend, same as
+# youtube-oauth-start, and reads the stored tokens for that caller only.
+[functions.youtube-channel-stats]
+verify_jwt = true

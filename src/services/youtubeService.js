@@ -13,3 +13,24 @@ export async function startYoutubeConnection() {
   if (error || !data?.url) return { url: null, error: FRIENDLY_ERROR };
   return { url: data.url, error: null };
 }
+
+// Real channel numbers for the signed-in user, read server-side by the
+// youtube-channel-stats Edge Function with the tokens stored at connect
+// time - the browser never sees those tokens. Resolves to { stats, error }
+// where `error` is one of the function's codes ("reauth_required",
+// "no_channel", "not_connected", "unavailable") so callers can tell "needs
+// reconnecting" apart from a transient failure.
+export async function fetchYoutubeChannelStats() {
+  const { data, error } = await supabase.functions.invoke("youtube-channel-stats", { method: "GET" });
+  if (!error && data && !data.error) return { stats: data, error: null };
+
+  let code = data?.error ?? "unavailable";
+  if (error?.context && typeof error.context.json === "function") {
+    try {
+      code = (await error.context.json())?.error ?? code;
+    } catch {
+      // Non-JSON error body - keep the generic code.
+    }
+  }
+  return { stats: null, error: code };
+}

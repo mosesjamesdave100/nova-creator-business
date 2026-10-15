@@ -14,6 +14,7 @@ import { formatCompactNumber, currencyWhole } from "../data/format";
 import { useAuth } from "../context/AuthContext";
 import { listConnectedAccounts } from "../services/connectedAccountsService";
 import { startYoutubeConnection } from "../services/youtubeService";
+import { useYoutubeChannelStats } from "../hooks/useYoutubeChannelStats";
 
 // Key metrics per provider, one line worth glancing at without opening the
 // full Analytics/Revenue page. Derived from the same data those pages read,
@@ -21,7 +22,17 @@ import { startYoutubeConnection } from "../services/youtubeService";
 // This stays demo data (per NOVA's existing demo dashboard) independent of
 // whether the platform is actually connected - see the real connection state
 // below, which is what determines whether a card shows as connected at all.
-function providerMetrics(id) {
+function providerMetrics(id, youtubeStats) {
+  // A connected YouTube account shows its real channel numbers instead.
+  if (id === "youtube" && youtubeStats?.source === "live") {
+    if (youtubeStats.error) return [];
+    return [
+      youtubeStats.followers === null
+        ? "Subscribers hidden"
+        : `${formatCompactNumber(youtubeStats.followers)} subscribers`,
+      youtubeStats.totalViews === null ? null : `${formatCompactNumber(youtubeStats.totalViews)} total views`,
+    ].filter(Boolean);
+  }
   const platform = audiencePlatforms.find((p) => p.id === id);
   if (platform) {
     return [
@@ -168,6 +179,7 @@ export function IntegrationsPage() {
   const [connectError, setConnectError] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [youtubeResult, setYoutubeResult] = useState(null);
+  const youtubeStats = useYoutubeChannelStats();
 
   async function load() {
     if (!user) return;
@@ -236,7 +248,13 @@ export function IntegrationsPage() {
     CONNECTABLE_PROVIDER_IDS.forEach((id) => {
       const row = accountsByPlatform[id];
       const connected = row?.status === "connected";
-      statuses[id] = { connected, accountLabel: connected ? row.display_name || row.platform_user_id || null : null };
+      // The channel name lands on the row the first time stats are fetched,
+      // so fall back to the live stats' copy until this page reloads it.
+      const liveLabel = id === "youtube" ? youtubeStats?.channel?.handle || youtubeStats?.channel?.title : null;
+      statuses[id] = {
+        connected,
+        accountLabel: connected ? row.display_name || liveLabel || row.platform_user_id || null : null,
+      };
     });
   }
 
@@ -256,8 +274,8 @@ export function IntegrationsPage() {
       {DEMO_MODE && (
         <div className="mb-6 flex items-center gap-2 rounded-md border border-hairline bg-surface-2 px-3.5 py-2.5 text-[13px] text-muted">
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-          Demo mode: every number in this dashboard is mock data. Connecting a provider here does not yet pull real
-          account data.
+          Demo mode: numbers in this dashboard are mock data, except a connected YouTube account, which shows its real
+          channel stats. The other providers don't pull real account data yet.
         </div>
       )}
 
@@ -277,7 +295,7 @@ export function IntegrationsPage() {
               <ProviderCard
                 platform={PLATFORMS[id]}
                 status={statuses[id]}
-                metrics={providerMetrics(id)}
+                metrics={providerMetrics(id, youtubeStats)}
                 onAction={handleAction}
                 busy={id === "youtube" && connectingYoutube}
               />
